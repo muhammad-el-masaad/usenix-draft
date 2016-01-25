@@ -461,8 +461,11 @@ Following the principles of secure design, we do not assume a synthesis procedur
 
 In the following, let $C(f,k)$ be the random variable describing the output of a synthesis procedure when invoked with description $f$ and key $k$ as input.
 \begin{definition}
-A locking synthesis procedure is secure only if the following condition holds for every behavioural description $f$ and key $k$. For every $k'\neq k$, there exists a behavioural description $f'$ such that the random variables $C(f,k)$ and $C(f',k')$ are statistically indistinguishable. We could opt to require the distributions of $C(f,k)$ and $C(f',k')$ to be perfectly indistinguishable instead; i.e., for each $c$ in the support of $C(f,k)$, $P[C(f,k)=c]=P[C(f',k')=c]$
-%$$ P(K|C)=P(K) $$
+A locking synthesis procedure is secure only if the following condition holds for every behavioural description $f$ and key $k$. For every $k'\neq k$ and $c$ in the support of $C(f,k)$, there exists a behavioural description $f'$ such that
+%variables $C(f,k)$ and $C(f',k')$ are statistically indistinguishable. We could opt to require the distributions of $C(f,k)$ and $C(f',k')$ to be perfectly indistinguishable instead; i.e., for each $c$ in the support of $C(f,k)$, 
+$P[C(f,k)=c]\leq P[C(f',k')=c]$
+%$$ P(K|C)=P(K) $$ 
+(probabilities are taken over the synthesis procedure's coin flips). If the synthesis procedure is to satisfy the correctness criteria, such $f'$ cannot be functionally equivalent to $f$.
 
 %A locking synthesis procedure is secure if for a every behavioural description $f$ and key $k$, the synthesis output $C$ and key $K$ satisfy 
 %$$ P(K|C)=P(K) $$
@@ -471,9 +474,24 @@ A locking synthesis procedure is secure only if the following condition holds fo
 
 This condition does not require $f'$ to be ``likely" to be provided by a chip designer as input to the synthesis procedure, which is why I characterize it as only necessary. It suffices, however, to protect against attacks like ours, where the attacker uses information about the publicly available synthesis procedure to desynthesize the netlist; but does not leverage heuristic knowledge of HDL coding practices.
 
-A sufficient condition would be to require the above to hold for all behavioural descriptions whose Boolean functions are equivalent to that of $f'$ (and of course, that the Boolean functions of $f'$'s are distinct from $f$). Formally, for every $g\equiv $We should note however that by doing so, we automatically obtain an indistinguishability obfuscator (if, post synthesis, we set the key bits to their correct values).
+If we need the procedure to be resilient to attacks where the attacker might leverage domain knowledge of HDL coding practices, we define security as follows.
 
-I also realized that both notions allow a much simpler construction for secure procedures: XOR $f$'s output with the output of a point function (whose password is the locking key), pass through an indistinguishability obfuscator, XOR the result with the output of a comparator that takes the input and key lines as arguments). The problem here of course is that the output corruptability for an incorrect netlist is very low. The BDD idea could have an advantage here.
+Let $F_n$ be the set of all Boolean functions $f_n$ of $n$ variables. For Boolean function $f_n$, let $\gamma_{f_n}$ be the set of all behavioural descriptions (of any size) that implement $f_n$. We model a developer of $n$-input circuits as a distribution ensemble $D_n=\{D_{f_n}\}_{f_n\in F_n}$ where distribution $D_{f_n}:\gamma_{f_n}\rightarrow [0,1]$ describes developer $D_n$'s inclination to describe $f_n$ using each element of $\gamma_{f_n}$. For developer $D_n$, let $C_{D_n}$ denote the random variable describing the output of the synthesis procedure (when the function $f_n$ is selected uniformly at random from $F_n$, and a description is sampled according to $D_{f_n}$). A locking synthesis procedure is secure if for every developer $D_n$ it holds that
+
+$$ P(K|C_{D_n})=P(K) $$
+
+where the probabilities above are taken over the coin flips of the procedure and the developer, and $K$ denotes the locking key.
+%require the condition above to hold for every behavioural description whose Boolean function is equivalent to that of $f'$ (and of course, that the Boolean functions of $f'$'s are distinct from $f$). Formally, for every $g\equiv f'$, 
+%the distributions of $C(g,k')$ and $C(f,k)$ should be perfectly/statistically indistinguishable.
+%$P[C(f,k)=c]\leq P[C(g,k')=c]$. 
+
+%We should note however that by doing so, we automatically obtain an indistinguishability obfuscator (if, post synthesis, we set the key bits to their correct values).
+
+\begin{proposition}
+If, post synthesis, we set the key bits to their correct values, then a locking synthesis procedure secure according to the definition above functions as an indistinguishability obfuscator.
+\end{proposition}
+
+Both notions of security defined above allow a much simpler construction for a secure procedure than our BDD idea. The construction is as follows: XOR $f$'s output with the output of a point function (whose password is the locking key), pass through an indistinguishability obfuscator, XOR the result with the output of a comparator that takes the input and key lines as arguments). The problem here of course is that the output corruptability for an incorrect netlist is very low. The BDD idea could have an advantage here.
 
 %The condition in this definition ensures that given the unencrypted netlist, knowledge of the encrypted netlist does not reduce uncertainty about the locking key --- assuming that every behavioural. 
 
