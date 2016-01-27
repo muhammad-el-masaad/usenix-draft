@@ -36,7 +36,7 @@ We further extend our definition by allowing a synthesis procedure to be randomi
 \begin{figure}[h]
   \dummyfig{Dummy Figure Label} 
   \caption{A BDD representing the function $f = a \equiv b$. The high and low children of a decision node are discriminated by using a solid (dotted) line to draw the edge leading to the high (low) child.}
-  \label{fig:dummy}
+  \label{fig:dummy1}
 \end{figure}
 
 The reader can see that such an output satisfies the first correctness criterion in Defintion ??. With careful selection of wires in the second step, it is conceivable that it can be made to additionally satisfy the second correctness criterion. However, as we will see later, the procedure does not satisfy our condition for secure synthesis, and as such, must not be considered secure. We use this example locking procedure for its simplicity to illustrate how a basic locking procedure might work. The mechanism was proposed by \cite{} as part of a larger ``purely combinational" IC activation scheme and is known in the lierature as XOR locking \cite{}. It is worth noting that the authors specify that to minimize impact on the delay characteristics of the final chip, all critical paths in the netlist must be avoided when selecting wires for XOR insertion in Step ??.

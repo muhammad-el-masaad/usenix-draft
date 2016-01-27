@@ -38,18 +38,18 @@ We now propose a candidate locking procedure that not only meets our necessary c
 A binary decision diagram (BDD) is a way of representing a Boolean function in terms of a graph that describes the Boolean calculations performed by the function. Given an assignment to the input variables of the function, an evaluator starts at the root of the diagram and proceeds by selecting one of the two children the current node, based on the value of the variable associated with the node. This continues until the evaluator reaches a leaf node, which specifies the value taken by the function at that particular sequence of input values. As an example, a BDD for representing the function $f = a \equiv b$ is shown in Figure ??.
 
 %% This part makes a figure
-\begin{figure}[h]
+\begin{figure}[ht]
   \dummyfig{Dummy Figure Label} 
   \caption{A BDD representing the function $f = a \equiv b$. The high and low children of a decision node are discriminated by using a solid (dotted) line to draw the edge leading to the high (low) child.}
-  \label{fig:dummy}
+  \label{fig:dummy2}
 \end{figure}
 
 More formally, a BDD can be defined as a rooted directed acyclic graph with two types of nodes: \emph{decision} and \emph{terminal} nodes. A terminal node can be either a $0$-terminal or a $1$-terminal, and there can be at most two terminal nodes in a BDD. Each decision node, $N$, is labeled with a variable $V_N$ and has two child nodes: a low child and a high child. The edge from $V_N$ to its low (or high) child represents an assignment of $V_N$ to $0$ (respectively $1$). A path from the root node to the $1$-terminal represents a variable assignment for which the Boolean function is true. Similarly, a path to the $0$-terminal represents a variable assignment for which the Boolean function is false. Note that given a BDD representation of a function, we can easily build a Boolean circuit that decides the function, for instance, by replacing each decision node $N$ with a 2-to-1 multiplexer that uses $V_N$ the its select line. This is illustrated in Figure ???.
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \dummyfig{Dummy Figure Label} 
   \caption{A BDD representing the function $f = a \equiv b$. The high and low children of a decision node are discriminated by using a solid (dotted) line to draw the edge leading to the high (low) child.}
-  \label{fig:dummy}
+  \label{fig:dummy3}
 \end{figure}
 
 BDDs as a way of representing Boolean functions are special, in that a BDD is a canonical representation of its corresponding Boolean function:, i.e., if we fix the input variable order, there is only one way to represent a Boolean function using a BDD \cite{}. Moreover, unlike a truth table (another canonical representation), the size of a BDD is not always exponential in the number of input variables. These two facts together form the basis for the data structure use in a wide variety of applications \cite{}. Canonicality, in particular, plays a key role for our construction of a secure synthesis procedure, as will become apparent shortly.
@@ -82,18 +82,18 @@ We convert the standard BDD representation to a ``compact" representation in whi
 
 \end{lemma}
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \dummyfig{Dummy Figure Label} 
   \caption{A BDD representing the function $f = a \equiv b$. The high and low children of a decision node are discriminated by using a solid (dotted) line to draw the edge leading to the high (low) child.}
-  \label{fig:dummy}
+  \label{fig:dummy4}
 \end{figure}
 
 \paragraph{Encryption Procedure}  To encrypt the new BDD, we pick $k$ nodes at random and insert a new node for each as a descendant, in the manner shown in Figure ??. Each of the new $k$ nodes is then labeled with the variable corresponding to a distinct key bit. If the value of the corresponding key bit is $1$, the polarity of node $N$'s children with respect to the new key node, is preserved; otherwise, children polarities are flipped (low becomes high and high becomes low). %The resulting BDD is then fed into a synthesis tool (after conversion into a circuit) to obtain the final implementation.
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \dummyfig{Dummy Figure Label} 
   \caption{A BDD representing the function $f = a \equiv b$. The high and low children of a decision node are discriminated by using a solid (dotted) line to draw the edge leading to the high (low) child.}
-  \label{fig:dummy}
+  \label{fig:dummy5}
 \end{figure}
 
 %\begin{figure*}[!htb]
