@@ -1,0 +1,7 @@
+\section{Related Work}
+While attractive, XOR-based locking has been shown to suffer from certain weeknesses. Rajendran et al. show that selection of random wires to replace with XOR gates is ineffective to defend against a certain kind of attack. The attack they describe uses a functional chip, and automatic test pattern generation to resolve the correct values of key bits. They also show that unless wires are selected judiciously, an incorrect key applied to the ``encrypted" circuit may not always result in significantly different behaviour. They describe algorithms for wire selection that, they argue, defends against their attack, and maximize 
+
+Since its introduction, logic encryption has been subject to various kinds of attacks. The first known attack, described by JV et. al, leverages VLSI testing principles to decipher the functionality of the camouflaged gate . The attack described by us in the context of camouflaging could also be potentially adapted to work againt logic encryption. Igor also proposes an attack that uses test patterns provided by the designer to guide a hill climbing search for the correct key.
+
+A common thread across all published attacks is that they generally require some level of access to input-output behaviour information of the circuit. JV's attack assumes access to a functional IC, which the fab presumably acquired from the market after fabricating the first batch. The same things holds for our attack. Igor's attack assumes access to test patterns provided by the designer.
+

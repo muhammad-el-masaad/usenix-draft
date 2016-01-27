@@ -1,0 +1,129 @@
+\section{Secure Synthesis}
+In this section, we argue that XOR locking (Section ??), and to the best of our knowledge, must not be considered secure; as they all fail to satisfy basic requirement of any information hiding scheme with no c. We Following the principles of secure design, we do not assume a synthesis procedure to be secret; rather we base our security on the secrecy of the correct key $k^*$.
+
+\subsection{A Necessary Condition}
+Intuitively, a synthesis procedure must at a minimum make it ``hard" --- if at all possible --- for a malicious entity at a fab to recover the correct key from an encrypted design. To make an analogy to the traditional setting of encryption, this is similar to say that it must be hard or impossible for an eavesdropper to correctly guess a sender's secret key simply by observing encrypted communication between the sender and a receiver \footnote{the settings are not exactly the same as unlike most settings where encryption is used, here the ``eavesdropper" only gets to read a \emph{single} message; the sender also gets to change the encryption key prior to sending a new communication}. Cryptographic protocols usually ensure this by making key deduction equivalent (or at least as hard as) solving a computational problem known to be xxxx hard. Common examples are integer factoring and the discrete logarithm problems \cite{}. This is know as the computational hardness approach to security \cite{}.
+
+Another approach, the information theoretic one \cite{} is to xxxx make a plaintext absolutely independent of the ciphertext, \footnote{In cryptography, this is known to be possible to achieve only when the key space is as large as the message space \cite{}. Therfore, information theoretic security, while intuitively preferrable, is usually foregone in xxxx of computational security, which is possible to achieve even given key spaces of limited size (security is parameterized by the key length)}where independence is xxxx in a probabilitstic sense, i.e., if $X$ is a random variable that denotes the plaintext, and $Y$ is the random variable that denotes the ciphertext, then the probability distributions of the two variables must satisfy:
+
+$$ P(X|Y) = P(X) $$
+
+In our setting, we seek to protect the locking key; and what the attacker has access to is an encrypted netlist output by a synthesis procedure as defined in Section ??. We there argue that a \emph{necessary} condition of secure synthesis is:
+
+\begin{proposition}
+A locking synthesis procedure as defined in Section ?? is secure only if for every behavioural description $f$, the synthesis output $C$ and key $K$ satisfy 
+$$ P(K|C)=P(K) $$
+where the probabilities above are computed assuming each of the $2^{2^n}$ behaviours that can be provided as input to the synthesis procedure --- are equally likely, and that for each behaviour, all descriptions are equally likely to be provided as input.
+\end{proposition}
+
+The condition in Proposition ?? ensures that given the unencrypted netlist, knowledge of the encrypted netlist does not reduce uncertainty about the locking key. %Is this condition sufficient by itself to guarantee impossibility of key recovery? No. As a counter-example, consider a synthesis procedure that produces, for an input behavioral description, a implementation that, for all keys other than the correct one, behaves as specified by the input description, for all inputs save one (a fixed value for all keys). The construction in Figure?? is one example of such implementation The comparator checks wether the input key . Such synthesis procedure is clearly secure according to Condition 1; the input correct key value is not used at all when constructing the encrypted design; therefore the locked design produced is the same for all input keys, i.e., it is independent of the correct key value. Such a locking 
+%We therefore introduce another condition for secure synthesis:
+%\begin{proposition}
+%A synthesis procedure as defined in Section ?? is secure only if 
+%\end{proposition}
+%Such a condition rules out procedures like the one in Figure ??.
+Note that we assume that for every behaviour, all descriptions are equally likely \footnote{It can be argued that not all descriptions are likely for a given desired behaviour; e.g, if the circuit is required to produce $0$ identically as output, this is more likely to be specified in VHDL as an output port being set to zero; rather than the AND of two intermediate signals that are complements of each other. This is just an extreme example; a reader experienced in VLSI design will identify more realistic ones.}. This is why the condition is necessary.
+
+\subsection{Are Existing Schemes Secure?}
+In Section ??, we report experimental evidence that a sample locking procedure --- XOR locking --- is not secure as a simple attack manages to recover more bits of the correct key that should be possible by random chance. Here, we make make an informal argument why --- due to the way they work in general --- none of the existing locking schemes satisfies our necessary condition for secure synthesis.
+
+A quick look at locking schemes that have been proposed in the literature reveals a general trend to refrain from perform locking on the RTL; but to rather do it on some a technology-mapped netlist (as in the case ofo \cite{} and \cite{}), or unspecified (but implied to be a network, as in \cite{}). This to justifiable to some extent: one can argue that locking is more easily done on a network-representation of a circuit; rather than an abstract form of desired behaviour (such as a Verilog or VHDL code). To see this, consider that the opportunities for modification are generally higher in a Boolean network than in a corresponding RTL description (a single Verilog line of code such as z = a + b where a and b are 32-bit registers will be converted by a Verilog compiler to a network with at least 32 XOR gates, each of which is candidate for modification by a locking algorithm, e.g. one that inserts XOR gate). The second correctness criterion is also easier to satisfy when working on Boolean network rather than RTL. For example in the context of XOR locking, one can use an automatic test pattern generation tool to make sure that two stuck-at-faults at the selected wires do not cancel each other out, thereby rendering some incorrect key equivalent to the correct one, in the sense that applying the incorrect key results in correct circuit behaviour. Given that ATPG tools accept netlists as input, it is attractive to defer locking till at least some form of synthesis has been performed (e.g, until a corresponding multi-level network has been constructed by the synthesis tool, as a first step to prepare the network for optimization).
+
+In this paper, we argue that performing locking post-synthesis (or in general, after some optimizing transformation has been applied on the RTL) in a logic locking scheme, introduces a subtle vulnerability in the scheme. The vulnerability comes about as a result of the fact that --- Unlike ``raw" RTL (pre-synthesis) --- in an optimized network, different parts of the network are no longer ``independent" of each other as they were before synthesis. Consider, for instance, an optimizing transformation that looks for sequences of inverters in a netlist, and replaces each with a single (or no) inverter (preserving the Boolean function implemented by the network). This is a very simple transformation to apply on a circuit netlist, and one that presumably any worthwhile logic synthesis tool should implicitly or explicitly perform. Now assume that the step of moving inverters up and down the netlist in the XOR locking scheme is removed from the procedure. A sequence of two inverters will then be a dead giveaway that the correct value of the key bit feeding the preceding XOR gate is a 1 (and so an inverter has been placed by the locking procedure after the XOR gate to ensure the first correctness criterion is satisfied). This is of course a trivial example, and it only fair to assume that the authors of the XOR locking procedure introduced the inverter moving step to prevent such an easy attack. Our point is that unless the procedure guarantees \emph{by construction}, and \emph{for every circuit}, that each key is equally likely regardless of the procedure's output (as ensured by our necessary condition for secure synthesis), such a locking procedure should \emph{not} be considered secure.
+
+We now propose a candidate locking procedure that not only meets our necessary condition for secure synthesis, but also allows to easily ensure the correctness criteria of locking synthesis are satisfied. We first provide a brief introduction to a concept in  that is critical to understanding our technique, that is of binary decision diagrams. 
+%A reader familiar with binary decision diagrams can skip directly to Section ??.
+
+\subsection{Binary Decision Diagrams}
+A binary decision diagram (BDD) is a way of representing a Boolean function in terms of a graph that describes the Boolean calculations performed by the function. Given an assignment to the input variables of the function, an evaluator starts at the root of the diagram and proceeds by selecting one of the two children the current node, based on the value of the variable associated with the node. This continues until the evaluator reaches a leaf node, which specifies the value taken by the function at that particular sequence of input values. As an example, a BDD for representing the function $f = a \equiv b$ is shown in Figure ??.
+
+%% This part makes a figure
+\begin{figure}[h]
+  \dummyfig{Dummy Figure Label} 
+  \caption{A BDD representing the function $f = a \equiv b$. The high and low children of a decision node are discriminated by using a solid (dotted) line to draw the edge leading to the high (low) child.}
+  \label{fig:dummy}
+\end{figure}
+
+More formally, a BDD can be defined as a rooted directed acyclic graph with two types of nodes: \emph{decision} and \emph{terminal} nodes. A terminal node can be either a $0$-terminal or a $1$-terminal, and there can be at most two terminal nodes in a BDD. Each decision node, $N$, is labeled with a variable $V_N$ and has two child nodes: a low child and a high child. The edge from $V_N$ to its low (or high) child represents an assignment of $V_N$ to $0$ (respectively $1$). A path from the root node to the $1$-terminal represents a variable assignment for which the Boolean function is true. Similarly, a path to the $0$-terminal represents a variable assignment for which the Boolean function is false. Note that given a BDD representation of a function, we can easily build a Boolean circuit that decides the function, for instance, by replacing each decision node $N$ with a 2-to-1 multiplexer that uses $V_N$ the its select line. This is illustrated in Figure ???.
+
+\begin{figure}[h]
+  \dummyfig{Dummy Figure Label} 
+  \caption{A BDD representing the function $f = a \equiv b$. The high and low children of a decision node are discriminated by using a solid (dotted) line to draw the edge leading to the high (low) child.}
+  \label{fig:dummy}
+\end{figure}
+
+BDDs as a way of representing Boolean functions are special, in that a BDD is a canonical representation of its corresponding Boolean function:, i.e., if we fix the input variable order, there is only one way to represent a Boolean function using a BDD \cite{}. Moreover, unlike a truth table (another canonical representation), the size of a BDD is not always exponential in the number of input variables. These two facts together form the basis for the data structure use in a wide variety of applications \cite{}. Canonicality, in particular, plays a key role for our construction of a secure synthesis procedure, as will become apparent shortly.
+%\footnote{One might wonder why we require the to be probably only; rather than requiring the outputs for both description-key pairs to be identically distributed. We argue that since an encryption key here is used only one time}
+
+%An overview of the various logic locking technique that has been proposed in the literature:
+\subsection{A Secure Synthesis Procedure}
+
+We now describe a locking synthesis procedure that meets the necessary condition for security introduced in Section ??. A striking feature of our procedure (or perhaps the necessary condition) is that it enables any transformation to be applied on resulting implementations (provided of course the transformation is functionality-preserving), without compromising security at all. We formalize this in the following lemma.
+
+\begin{lemma}\label{simple}
+Let $T$ be a functionality-preserving transformation, and denote by $s \circ t$ the (correct) synthesis locking procedure we obtain by composing $T$ with a locking synthesis procedure $s$. If $s$ satisfies the necessary condition for security of Proposition ??, the so does $s \circ t$. 
+\end{lemma}
+The proof of the lemma is straightforward.
+
+Our synthesis procedure takes the RTL description provided as input, and uses it to constructs a corresponding Boolean network. The BDD representation of the output variable's Boolean function is then computed (recall that we are assuming an RTL description of a single-output circuit). This BDD is then written in a compact form (), and modified to obtain a ``locked BDD". The locked BDD is then converted to a Boolean circuit, which is finally provided as output of the synthesis procedure. If a designer so wishes, they can then feed this circuit to a logic synthesis tool to further optimize it (or to perform technology mapping and obtain an implementation in terms of logic gates); thanks to Lemma \ref{simple}, they can be sure that these further operations on the circuit will in no way affect the security property.  We next describe each of the xxxx steps in detail, then prove that our procedure satisfies the necessary condition for secure synthesis in Section ??.
+
+%The first step
+In a standard BDD representation, every node can be thought of as representing an ``intermediate" Boolean function that defines the behavior of the ``overall" Boolean function for a specific partial variable assignment (the assignment represented by the path from the root to the node in question). Let $N_h$ and $N_l$ be the high and low children, respectively, of decision node $N$, and let $f_{I}$ be the Boolean function represented by node $I$.  We can then write,
+
+\[f_N=V_N f_{N_h}+V_N' f_{N_l}\]
+
+Note that if we switch the polarities of $N_h$ and $N_l$, the function represented by node $N$ becomes:
+
+\[f_N^*=V_N' f_{N_h}+V_N f_{N_l}\]
+
+We convert the standard BDD representation to a ``compact" representation in which a decision node $N$ represents both functions, and we signify this in a graph using ``bubbled" nodes. An incoming edge to a decision node $N$ can either terminate at the ``main" part or the ``bubble" part of $N$, to indicate which of the two functions $f_N$ and $f_N^*$ defines the behavior of the overall function for the corresponding partial variable assignment. An BDD can be converted into this form by simply looking for ``complement" nodes (a pair of nodes labeled with the same variable and that has the same children as each other; with different polarities), and replacing each pair with a single ``bubbled" node, preserving original ROBDD edge connectivity. Note that looking for such nodes is easy (we need to perform $O(N^2)$ comparisons, where $N$ the maximum number of nodes at any level in the BDD). An example is shown in Figure ??. Note that since the conversion procedure operates on BDDs --- a canonical representation --- and is deterministic, the resulting representation of the Boolean function must also be canonical. We call the new compact representation a \emph{bubbled} BDD.
+
+\begin{lemma}
+
+\end{lemma}
+
+\begin{figure}[h]
+  \dummyfig{Dummy Figure Label} 
+  \caption{A BDD representing the function $f = a \equiv b$. The high and low children of a decision node are discriminated by using a solid (dotted) line to draw the edge leading to the high (low) child.}
+  \label{fig:dummy}
+\end{figure}
+
+\paragraph{Encryption Procedure}  To encrypt the new BDD, we pick $k$ nodes at random and insert a new node for each as a descendant, in the manner shown in Figure ??. Each of the new $k$ nodes is then labeled with the variable corresponding to a distinct key bit. If the value of the corresponding key bit is $1$, the polarity of node $N$'s children with respect to the new key node, is preserved; otherwise, children polarities are flipped (low becomes high and high becomes low). %The resulting BDD is then fed into a synthesis tool (after conversion into a circuit) to obtain the final implementation.
+
+\begin{figure}[h]
+  \dummyfig{Dummy Figure Label} 
+  \caption{A BDD representing the function $f = a \equiv b$. The high and low children of a decision node are discriminated by using a solid (dotted) line to draw the edge leading to the high (low) child.}
+  \label{fig:dummy}
+\end{figure}
+
+%\begin{figure*}[!htb]
+%\centering
+%\includegraphics[scale=.5]{bubble_encrypt.eps}
+%\caption{Digraph.}
+%\label{fig:digraph}
+%\end{figure*}
+
+\begin{lemma}
+Let $G_{k'}$ be the graph we get by eliminating key nodes in an encrypted BDD and making connections in accordance with the value of $k'$, and then replacing each bubbled node with its ``regular'' equivalent. Then $G$ is a BDD.
+\end{lemma}
+
+\begin{proof}
+Assume not. Then $G$ must either contain nodes whose children are isomorphic (impossible, since there could not have been any in the original graph), or $G$ must contain subgraphs that are isomorphic. A pair of such subgraphs cannot be rooted by complement nodes, by definition; they also cannot be rooted by a pair of nodes ``originating" from different bubbled nodes (it would mean the original graph also had isomorphic subgraphs). No other possibilities remain, and thus no such pair of subgraphs can exist in the $G$. Hence, $G$ is also an ROBDD.
+\end{proof}
+
+\begin{lemma}
+Each $G_{k'}$ is a distinct BDD.
+\end{lemma}
+
+\begin{theorem}
+$s^{*}$ satisfies the necessary condition for secure synthesis of Proposition ??.
+\end{theorem}
+
+\begin{proof}
+Let $f$ be the input description to $s*$, and denote by $c_k$ the output we get . Note that $c_k$ is a random variable. We need to show that for each $k\in K$, there exists a description $f_k$ that, when locked with $s^{*}$ using $k$ as a key, we get $c_k$; with the same probability for all $k$. This description is simply the Boolean circuit corresponding to $G_{k}$ for each $k$. Due to the fact that BDDs are canonical, we know we will obtain $G_{k}$ at the end of Step 1 of the procedure, if we provide such circuit as input to the locking procedure with $k$ as the locking key. All we need now is to show that the subset of nodes selected in the locking step is as likely to have been selected by $s^{*}$ as the corresponding set of nodes in the BDD of $f$, but since $s^{*}$ selects decision nodes for locking uniformly at random, this direcctly follows.
+\end{proof}
+
+this esse consists of inserting XOR gates at random plac
+%In a bubbled BDD, rather than 
+%Encryption in a bubbled BDD corresponds to inserting new bubbled nodes 
+
