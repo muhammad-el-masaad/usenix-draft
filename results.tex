@@ -127,23 +127,25 @@ We note that one can use other, more BDD-targeted synthesis tools (the BDS and F
 
 \begin{table*}
 \caption{Performance of hill-climbing MSE attack on 11 sequential benchmarks from the MCNC set. Numbers are average number of key bits correctly recovered by attack for 5 runs on each benchmark. }
-\begin{tabular}{ | c | c | c | c | c | c | c | }
+\begin{tabular}{ | c | c | c | c | c | c | c | c | c | }
 \hline
- &	\multicolumn{6}{ | c | }{Key Size} \\
+ &	\multicolumn{8}{ | c | }{Key Size} \\
  \hline
-Circuit Name &	32-bit (MSE) &	32-bit (n+d) & 64-bit (MSE) & 64-bit (n+d) &	128-bit (MSE) & 128-bit (n+d) \\
+Circuit Name &	32-bit (MSE) &  & 32-bit (n+d) & 64-bit (MSE) & & 64-bit (n+d) &	128-bit (MSE) & 128-bit (n+d) \\
 \hline
-dk16	& 20.5 & 19.8 & & & &  		 \\
-ex1	& 17 & 17.6 & & & & 		\\
-keyb &	17.5 & 16.4 & & & & 		\\
-planet1 &	20 & 15.8 &	39 & 31.6 & &   	\\
-planet &	19.6 & 14.8 &	33	& 31.4 & &  \\
-s1a	& 20	& 16.4 & & & &	\\
-s1	& 18 & 16.8 &	37 & 31.2 & &	\\
-sand	& 17.8 & 13 &	36.6 & 34.2 & & \\	
-scf	& 21.2	& 15.4 & 40.2 & 33.4	& 75 & 63.8 \\
-styr &	18.8 &	16.2 & 38.6 & 30 & &  \\	
-tbk	& 22.2 & 17.6 &	36 & 34.2 & & \\	
+dk16	&   20.5    &  24.5 &  19.8 &  &   &   &   & 		 \\
+ex1	    &   17      &  23.7 & 17.6 & & & & & 		\\
+keyb &	17.5 & 22.4 & 16.4 & & & & & 		\\
+planet1 &	20 & 21.13 & 15.8 &	39 & 44 & 31.6 & & 	\\
+planet &	19.6 & 20.8 & 14.8 &	33	& & 31.4 & &   \\
+s1a	& 20	& & 16.4 & & & &	& \\
+s1	& 18 & & 16.8 &	37 & & 31.2 & & \\
+sand	& 17.8 & & 13 &	36.6 & & 34.2 & & \\	
+scf	& 21.2	& & 15.4 & 40.2 & & 33.4	& 75 & 63.8 \\
+styr &	18.8 & &	16.2 & 38.6 & & 30 & &  \\	
+tbk	& 22.2 & & 17.6 &	36 & & 34.2 & & \\	
+\hline
+\multicolumn{9}{ | c | }{In all cases for the experiment where I run the attack 100 times, the number of recovered key bits is greater than 50.} \\
 \hline
 \end{tabular}
 \end{table*}
