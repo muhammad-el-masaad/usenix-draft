@@ -8,12 +8,33 @@ cutting-edge fabrication.
 As a result, 
 many semiconductor design companies have 
 adopted the \textit{fabless} model, i.e., they outsource integrated circuit (IC) fabrication to one of a few large commercial IC foundries, often located off-shore. 
+As per a recent study~\cite{}, 
+four out of the 
+top five semiconductor foundries by 
+volume are located outside the United States. Most other countries  
+either do not have a commercial 
+foundry on-shore, and others that do only have access to low-end fabrication technology.  
+
+The fabless model comes with the risk of compromising the 
+designer's intellectual property (IP), i.e., the design of chip. 
 When a designer outsources a chip for fabrication, the 
-foundry has full access 
-to the chip's design details. 
-[Increases risk of IP theft. Also, 
-if designer is a state actor, might wish to keep 
-design secret...]
+foundry obtains full access 
+to the chip's layout (effectively a chip blue-print), 
+from which it can 
+recover its Boolean logic gate-level 
+netlist and its 
+Boolean 
+functionality 
+[Citation here? Shall we say IC extraction?]. 
+An untrusted 
+foundry can sell the designer's IP 
+to its competitors or produce and sell extra copies of the 
+chip. 
+In many cases, the chip might implement proprietary 
+protocols or algorithms --- the designer stands to loose competitive 
+advantage if these are revealed to competing firms. 
+[proprietary security protocol -- if revealed, security compromised?] 
+[More citations to indicate that industry/DoD etc care about this?]  
 
 %a heightened risk of intellectual property (IP) theft, 
 %laws are lax  or weakly enforced. Hardware IP theft 
@@ -50,19 +71,57 @@ correct key into the key register.
 The security of logic locking 
 is premised on the foundry not knowing the correct key.
 If the correct key is compromised, the foundry learns of the 
-chip's functionality. 
-The foundry 
-%learns the chip's functionality 
-can not only {overbuild} the IC (that is, keep some manufactured parts 
-for itself, activate them with the correct key and sell them in the 
-black market) but also design and manufacture 
-new but functionally equivalent versions of the chip. 
-Roy et al. protect against the former 
-threat, i.e., 
-that of overbuilding, by introducing a [.....]. 
-However, [...] does not protect from second threat, which is 
-arguably more pernicious. 
-    
+chip's functionality.\footnote{In fact, the protocol proposed by Roy et al. introduces two keys --- a master key that is common to each chip, and a per-instance chip key. See Section~\ref{sec:discussion} for more details? [how to word?]} 
+
+The original logic locking procedure proposed by Roy et al. 
+inserts XOR/XNOR gates at randomly chosen locations in the 
+net-list. However, several other logic locking mechanisms have been proposed in literature that use different types of key gates or 
+different procedures to insert key gates~\cite{}.   
+However, recent work by Princeton et al.~\cite{} has 
+established 
+that \emph{all} of these techniques 
+are vulnerable to attack \emph{if} the 
+untrusted foundry obtains a 
+working copy of the chip, i.e., 
+a chip activated with the correct key. 
+Note that the foundry cannot directly 
+probe the activated chip for the key, but instead 
+must infer it from 
+the chip's input/output (IO) functionality.   
+Princeton 
+et al.~\cite{} propose an iterative, SAT-based procedure 
+that successfully recovers the correct key for large 
+circuits locked 
+with a number of techniques proposed in literature. 
+[Concurrently, El Massad proposed identical attack for IC camouflaging, that addresses a slightly different defense mechanism.]
+
+Princeton and El-Massad's work has established that 
+existing logic 
+locking mechanisms are insecure, but 
+under \emph{conservative}  
+assumptions on the attacker's capabilities.
+[Is it clear what we mean? Maybe, under impractical assumptions..] 
+That is, for the
+attack to succeed, the attacker, i.e., the foundry that is fabricating the chip,must have access to a previously fabricated and 
+activated copy of the chip.
+Such a strong attack model 
+is unrealistic in several scenarios of 
+practical interest. 
+
+***Flesh out this para
+For one, a foundry may not be able to 
+acquire a working copy of a chip that is  
+non-consumer electronics [better word/phrase]. 
+These include chips designed by government entities [satellites/military 
+hardware/critical infrastructure]. Second, even for consumer electronics, first time chip is being taped out [typically when locking is most critical]. 
+Finally, locking used to obfuscate an algorithm/mechanisms that has no observable impact on I/O, btu for instance, only on timing/speed. 
+
+So far, the implicit assumption has been that logic locking 
+is secure in the more practical setting in which the 
+foundry does \emph{not} have access to a working [activated?] chip. 
+In this paper, we examine this assumption critically. 
+  
+
  
    
 
