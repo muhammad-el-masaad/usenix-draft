@@ -1,5 +1,82 @@
 \section{Introduction}
 
+The cost of setting up a semiconductor foundry, also referred to 
+as a \emph{fab}, 
+has been increasing with technology scaling, and is 
+currently upwards of \$5 billion~\cite{FoundryCost} for 
+cutting-edge fabrication.
+As a result, 
+many semiconductor design companies have 
+adopted the \textit{fabless} model, i.e., they outsource integrated circuit (IC) fabrication to one of a few large commercial IC foundries, often located off-shore. 
+When a designer outsources a chip for fabrication, the 
+foundry has full access 
+to the chip's design details. 
+[Increases risk of IP theft. Also, 
+if designer is a state actor, might wish to keep 
+design secret...]
+
+%a heightened risk of intellectual property (IP) theft, 
+%laws are lax  or weakly enforced. Hardware IP theft 
+
+%However, this comes at the expense of trust. 
+%How can the design company trust that the off-shore (untrusted) foundry has not {pirated its intellectual property} (IP), or maliciously modified the IC by inserting a hardware backdoor, commonly referred to as a {hardware Trojan}, in the chip? 
+%Hardware IP theft and Trojan insertion have been recognized as 
+%significant threats to the economic viability of outsourced 
+%IC fabrication, and to the security of 
+%ICs used in 
+%areas such as
+%critical infrastructure (for instance, communication networks, the smart grid and the emerging internet-of-things), national defense and consumer electronics. 
+
+Logic locking, a technique first introduced by Roy et al.~\cite{}, 
+is a promising solution to protect the designer's IP from 
+being thieved by an untrusted foundry.\footnote{This technique has 
+also been referred to as logic obfuscation~\cite{} and logic encryption~\cite{} in the literature. However, following the lead of Roy et al., we will use the term logic locking throughout.}  
+Logic locking works by inserting 
+additional gates, referred to as \emph{key gates}, 
+in a Boolean 
+logic netlist with 
+side-inputs that are referred to as \emph{key bits} and 
+stored in a key register. 
+The netlist functions as intended \emph{only} 
+for a certain key, and provides ``junk" 
+outputs otherwise. 
+
+The correct key, i.e., 
+the key bits that produce the designer's intended 
+functionality, 
+is known to the designer but not to the foundry. The foundry manufactures the chip and ships the manufactured parts to the 
+designer. The designer activates the chips by loading the 
+correct key into the key register. 
+The security of logic locking 
+is premised on the foundry not knowing the correct key.
+If the correct key is compromised, the foundry learns of the 
+chip's functionality. 
+The foundry 
+%learns the chip's functionality 
+can not only {overbuild} the IC (that is, keep some manufactured parts 
+for itself, activate them with the correct key and sell them in the 
+black market) but also design and manufacture 
+new but functionally equivalent versions of the chip. 
+Roy et al. protect against the former 
+threat, i.e., 
+that of overbuilding, by introducing a [.....]. 
+However, [...] does not protect from second threat, which is 
+arguably more pernicious. 
+    
+ 
+   
+
+
+
+
+
+ 
+ 
+
+
+
+
+\section{Old}
 Story:
  ---- IP theft is a major issue due to outsourced fab
  
