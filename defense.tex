@@ -35,14 +35,15 @@ $c$ provides correct outputs for all inputs; (2) when the attacker applies an in
 We further extend our definition by allowing a synthesis procedure to be randomized; that is, provided the same circuit description and key as input, two separate executions of the synthesis procedure can result in different outputs (however both must still satisfy the correctness criteria mentioned above).
 
 \subsection{A Notion of Security for Logic Locking}
- Based on the previous defintion for a locking synthesis procedure, we now describe our notion of securrity. The notion is very simple, for every We therefore propose that, unless the procedure guarantees \emph{by construction}, and \emph{for every circuit}, that each key is equally likely regardless of the procedure's output (as ensured by our necessary condition for secure synthesis), such a locking procedure should \emph{not} be considered secure.
+ Based on the previous definition for a locking synthesis procedure, we now describe our notion of security. The notion is very simple: for every behavioural description, and every key combination (including the correct key), we require that there be a (necessarily distinct) behavioral description, that when locked using the key combination, produces the same locked netlist that the fab observes. 
+ 
+ %We therefore propose that, unless the procedure guarantees \emph{by construction}, and \emph{for every circuit}, that each key is equally likely regardless of the procedure's output (as ensured by our necessary condition for secure synthesis), such a locking procedure should \emph{not} be considered secure.
 
 %Following the principles of secure design, we do not assume a synthesis procedure to be secret; rather we base our security on the secrecy of the correct key $k^*$.
 
-\subsection{A Necessary Condition}
+%\subsection{A Necessary Condition}
 
-
-In the following, let $C(f,k)$ be the random variable describing the output of a synthesis procedure when invoked with description $f$ and key $k$ as input.
+To be more formal, let $C(f,k)$ be the random variable describing the output of a synthesis procedure when invoked with description $f$ and key $k$ as input. We define the notion of security as follows.
 \begin{definition}
 A locking synthesis procedure is secure only if the following condition holds for every behavioural description $f$ and key $k$. For every $k'\neq k$ and $c$ in the support of $C(f,k)$, there exists a behavioural description $f'$ such that
 %variables $C(f,k)$ and $C(f',k')$ are statistically indistinguishable. We could opt to require the distributions of $C(f,k)$ and $C(f',k')$ to be perfectly indistinguishable instead; i.e., for each $c$ in the support of $C(f,k)$, 
@@ -89,7 +90,7 @@ An indistinguishability obfuscator is a (possibly randomized) program that trans
 
 Both notions of security defined above allow a much simpler construction for a secure procedure than our BDD idea. The construction is as follows: XOR $f$'s output with the output of a point function (whose password is the locking key), pass through an indistinguishability obfuscator, XOR the result with the output of a comparator that takes the input and key lines as arguments). The problem here of course is that the output corruptability for an incorrect netlist is very low. The BDD idea could have an advantage here.
 
-\begin{definition}[A notion of security based on indistinguishability, or semantic security]
+\begin{definition}[A notion of security based on indistinguishability]
 A locking synthesis procedure is secure if the probability of a PPT adversary winning the following game is negligible (in the key length $k$): the adversary knows the details of the locking procedure, and he performs polynomial time computations of his choice. He then provides the the locking oracle with two circuits $c_1$ and $c_2$ of his choice (they only get to do this \emph{one time}). The locking oracle selects one of $c_1$ and $c_2$ uniformly at random, locks the selected circuit using her locking key, and provides a locked circuit to the adversary. The adversary performs polynomial-time computations of his choice and then guesses which of $c_1$ and $c_2$ was selected by the locking oracle. The adversary wins the game is his guess is correct.
 \end{definition}
 
