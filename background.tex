@@ -1,25 +1,4 @@
 \section{Background: Circuit Locking}
-A traditional synthesis procedure takes as input a description of some desired circuit behaviour and outputs an implementation of the design in terms of logic gates. Unlike previous work \cite{}, we do not treat locking as separate from synthesis; rather we view them as one integrated procedure. Therefore, we extend the definition of a synthesis procedure by allowing to receive along with the behavioral description of a circuit; a bitstring representing a key (which we assume the designer have selected uniformly at random from some key space, of size $2^k$, for integer security parameter $k$), and refer to the new procedure as a \\emph{locking synthesis procedure}. Rather than outputting a design implementing the circuit behaviour provided as input, a locking synthesis procedure outputs an ``augmented" design, one that satisfies certain correctness criteria. For simplicity, we assume all RTL descriptions are of single-output circuits which consist of combinational logic only, but we note that all definitions and results are easily extend-able to the multiple-output case as well as sequential logic.
-
-\begin{definition}
-A \emph{locking synthesis procedure} takes as input a register-transfer level (RTL) description of a circuit, $f$ (which we model simply as text), and a bitstring $k^{*} \in \{0,1\}^{m}$ of length $m$. We denote by $n$ be the number of circuit inputs in the RTL description $f$. For each $(f,k^*)$-pair, the procedure outputs a circuit $c$ with two sets $x$ and $k$ of $n$ and $m$ inputs respectively. The circuit $c$  satisfies the following correctness criteria (we use $f: X \rightarrow Y$ and $c: X \times K \rightarrow Y$ where $K = \{0,1\}^{m}$, $X = \{0,1\}^{n}$ and $Y = \{0,1\}$ to denote the Boolean functions of $f$ and $c$ respectively):
-$$ c(x,k^{*}) = f(x) \, \, \forall x \in X, $$
-and 
-$$ \exists  x \in X \,\, s.t. \,\, c(x,k) \neq c(x,k^{*}) \, \, \forall k \in K.$$ 
-\end{definition}
-%For any $x \in X$, the function outputs $y \in Y$ and we say $y = f(x)$.
-
-%To obfuscate the implementation, the defender introduces $m$ key bits, and selects a key $k^{*} \in \{0,1\}^{m}$ uniformly at random. 
-
-%The function that the defender implements (which the attacker sees) is 
-%$c: X \times K \rightarrow Y$ where $K = \{0,1\}^{m}$. 
-%For any $x \in X$ and $k \in K$, the function outputs $y \in Y$ and we say $y = c(x,k)$.
-
-%The implementation must satisfy the following:
-These requirements guarantee that: (1) when the defender applies the correct key, $k^{*}$,
-$c$ provides correct outputs for all inputs; (2) when the attacker applies an incorrect, the resulting circuit differs from the correct one for at least one input.
-
-We further extend our definition by allowing a synthesis procedure to be randomized; that is, provided the same circuit description and key as input, two separate executions of the synthesis procedure can result in different outputs (however both must still satisfy the correctness criteria mentioned above).
 
 \paragraph{Example} An example of a locking synthesis procedure is the following. Take the behavioral description $f$ and do conventional (locking-free) synthesis to obtain a gate-level implementation. Select $m$ internal wires in the resulting circuit uniformly at random, and associate each with a distinct key bit. Depending on whether the corresponding key bit is 0 or 1, insert either an XOR gate or an XOR gate along each wire, with one input of the gate connecting to the wire's driver and the other input dangling (this is illustrated in Figure ??). Replace each XNOR gate with an XOR gate followed by an inveror then use DeMorgan's laws to move these inverters to random locations up or down the netlist. Provide the resulting netlist as the synthesis output.
 

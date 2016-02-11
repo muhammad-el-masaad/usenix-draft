@@ -135,60 +135,6 @@ In this paper, we examine this assumption critically.
 
 
 
-\section{Old}
-Story:
- ---- IP theft is a major issue due to outsourced fab
- 
- ---- Logic locking/encryption/obfuscation, but we will cite Markov and stick with locking.
- 
- ---- What is logic locking. (Figure, SG to send). Forward refs 
- to two threats that logic locking addresses: (1) IP theft; (2) over-building in the discussion section.
- 
- ---- Several recent papers (NDSS'15, HOST'15) have shown that the master key can be recovered practically recovered ***If attacker can exercise design with inputs of his/her choosing and observe outputs.** But this attack model is unrealistic in several settings; for example, if the chip is being fabbed for the first time, or is not commercially available. 
- 
- --- So far, the assumption has been that a weaker attacker who only has access to locked netlist can obtain no information about the master key. In this paper, we show that this is not the case. 
- 
- 
---- Logic synthesis is a procedure that transforms a behavioural description of Boolean functionality (written in Verilog, for instance) to a netlist of Boolean logic gates, i.e., a graph in which vertices are Boolean gates like NAND/NOR and edges are wires that connect gates. Commercial logic synthesis tools try to optimize for performance metrics like area, roughly the number of gates in the netlist. The vulnerability arises from the fact that all existing 
-logic locking mechanisms in literature propose to insert key gates 
-in a synthesized netlist (see Fig X of first logic locking paper) 
---- as we show in this paper, logic synthesis implicitly embeds information about the Boolean functionality in the netlist. 
 
---- Our contributions in this paper are two-fold: 
-(1) we propose logic desynthesis, a 
-powerful new attack (blurb). 
-(2) In the context of this attack, we provide a 
-precise 
-characterization of ``secure synthesis" 
-(3) concrete instantiation.
-
-
-
-
-
-
-
- 
- 
- 
- 
- 
- 
-The traditional ``localized" IC supply chain is being replaced by a modern, globalized one. While once a single IC design company handled all steps in the chain from design to fabrication, different steps are now carried out by different entities. In particular, there is a trend to outsource the fabrication part of the process to off-shore manufacturing facilities, often referred to as ``fabs", and having the semiconductor company deal only with conceptual and physical design steps. These fabs could be physically located anywhere in the world, particularly in jurisdictions where intellectual property laws are lax  and/or weakly enforced.
-
-These changes in the traditional flow have prompted research into potential IP infringement practices by foreign foundries that could threaten the semiconductor industry. The overbuilding, or building in excess, of chips by foundries for distribution in the black market is one such threat: IC foundries are typically licensed to fabricate only a limited number of chips from the photo-masks provided to them by designers. Any production of ICs beyond the licenced amount is considered an IP infringement, and could be punishable by law if detected. The problem is, once a designer hands over a plain photo-mask to the fab, they no more have control over how many chips the fab decides to produce. This, of course, does not work in favor of IC design companies, whose IP is being exploited without their consent. 
-
-Logic encryption is one technique that have recently been proposed to protect designer IPs from overproduction by foundries. The technique works by modifying the IC design flow in a way that requires a foundry to communicate with the IC design company every time they wish to release a newly fabricated and functioning chip into the market. The basic idea is to modify the gate-level netlist of the design so it 
-%that the photomask received by the fab produces a chip which 
-can perform one of many functions; depending on the value programmed into a \emph{key register}. When the correct key is stored into the key register, the chip performs performs its original function; otherwise it performs a potentially different function, depending on how the original gate-level netlist modified. The correct key value is held secret by the IP rights holder and released only in an encrypted form to the fab, at the time when the fab wants to distribute a newly manufactured chip on the market. When the fab gets the encrypted key from the IP holder, it enters it into the chip, where the key gets decrypted to its plain form by specially added cryptographic modules\footnote{The decryption key is unique for each chip, to prevent the fab from using the same key to activate multiple chips}; bringing the chip to a working state.
-%; in a process referred to as \emph{activation}. 
-Without knowledge of the correct key for a chip, and with no prior information on the design, the fab can only release the chip with a random value in the key register, which may cause the chip to behave differently than intended. By necessitating communication between fab and designer before a new, correctly functioning chip can be released on the market, the designer is enabled to keep track of the amount of chips produced by the fab; which limits the fab's ability to overbuild. 
-
-%The ``correct" encrypted form is unique for each chip, as To prevent a fab from using the same key to activate multiple chips, the register-transfer level (RTL) description is also ``enriched" with support for an on-chip true random number generator (TRNG) that produces a randomized chip IP upon power-up. This ID must be sent by the fab to the IP rights holder which uses it to encrypt the locking key. requires its own encrypted key to be applied before it can function., in a process known as ``activation". Once the correct key appears on the key register, the chip can now be released on the market, as it can now perform its intended function. The same key cannot be used When the designer provides the fab with this special ``unlocking" code, it authorizes the release of the new chip. By doing this, the designer now has a means to keep track of the number of chips produced by the foundry, and the fab's ability to build in excess is effectively hindered. To prevent the fab from using the same code to activate more than one chip, the non-functioning version of the chip is designed such he activation codes are unique for each chip, . This is done by utilizing process variations in the form of a physically uncloneable function. 
-
-
-%Central to the logic encryption piracy prevention technique 
-Arguably the most important step in the new, logic-encrypted flow is what is known as \emph{logic locking}, the step in the flow where the gate-level netlist of the design is modified to obtain the new, ``locked" netlist. Almost all logic encryption technqius that have been proposed in the literature work on an intermediate representation of the design (in the form of a BLIF file), but they do not ensure a critical condition; that the encrypted netlist itself does reveal any information about the correct key. given that most of them do not provide any computational guarantees of hardness of key recovery from encrypted design and knowledge of encryption procedure, in this paper, We aruge that such information-theoretic guarantee is necessary. (unlike the case in conventional cryptography, this is harder to do for VLSI designs than one might initially think %/This is however not trivial to accomplish 
-when limits are placed on the key length). To this end, we propose a new encryption procedure that enables easy locking of the design and at the same time ensures absolute independence of the ``encrypted" design and the correct key. We formalize our notion of security in terms of two conditions and argue that any ``encryption" procedure must satisfy these conditions at a minimum for it to be considered secure (provided that the procedure does not provide computational hardness guarantees). To motivate our technique and notion of security, we also report experimental results that illustrate the fact that most combinational locking considered ``secure" do not in fact have the minimal properties that would be expected from a secure scheme. To give an insight on the overhead resulting from our locking scheme, we also report area and delay characteristics of benchmarks when locked using our technique.
 
 The rest of the paper is organized as follows. Section 3 

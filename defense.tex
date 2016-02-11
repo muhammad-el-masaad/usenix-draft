@@ -1,35 +1,126 @@
 \section{Secure Synthesis}
-In this section, we argue that XOR locking (Section ??), and to the best of our knowledge, must not be considered secure; as they all fail to satisfy basic requirement of any information hiding scheme with no c. We Following the principles of secure design, we do not assume a synthesis procedure to be secret; rather we base our security on the secrecy of the correct key $k^*$.
+%Clearly, neither XOR locking or \cite{}'s scheme 
+
+In this section, we first formally capture the intuitive notion of security that a locked netlist must reveal no information about the IP holder's common key. 
+%what it means for a locking scheme to be secure . 
+We then describe a candidate locking procedure that is secure in this sense. 
+%Our candidate procedure involves first representing the Boolean function of a given design in a canonical (yet practically efficient) way. The algorithm then performs locking on the resulting canonical representation.
+
+%describe a candidate construction for a locking scheme that is secure in this sense. 
+%We propose a notion of security for a locking procedure, that we argue every locking procedure must satisfy before the procedure can be considered secure. We also propose . 
+
+Before we go any further, we stress that our notion of security --- while enough to protect against our attack --- does not rule out other, more sophisticated attacks; for instance attacks where the fab leverages prior information it has on the design to be fabricated; to deduce the right holder's common key. Towards  the end of this section, we discuss stronger notions of security that protect against this kind of attack, and briefly outline to their potential overheads.
+
+\subsection{Preliminaries}
+A traditional synthesis procedure takes as input a description of some desired circuit behaviour and outputs an implementation of the design in terms of logic gates. Unlike previous work \cite{}, we do not treat locking as separate from synthesis; rather we view them as one integrated procedure. Therefore, we extend the definition of a synthesis procedure by allowing to receive along with the behavioral description of a circuit; a bitstring representing a key (which we assume the designer have selected uniformly at random from some key space, of size $2^k$, for integer security parameter $k$), and refer to the new procedure as a \emph{locking synthesis procedure}. Rather than outputting a design implementing the circuit behaviour provided as input, a locking synthesis procedure outputs an ``augmented" design, one that satisfies certain correctness criteria. For simplicity, we assume all RTL descriptions are of single-output circuits which consist of combinational logic only, but we note that all definitions and results are easily extend-able to the multiple-output case as well as sequential logic.
+
+\begin{definition}
+A \emph{locking synthesis procedure} takes as input a register-transfer level (RTL) description of a circuit, $f$ (which we model simply as text), and a bitstring $k^{*} \in \{0,1\}^{m}$ of length $m$. We denote by $n$ be the number of circuit inputs in the RTL description $f$. For each $(f,k^*)$-pair, the procedure outputs a circuit $c$ with two sets $x$ and $k$ of $n$ and $m$ inputs respectively. The circuit $c$  satisfies the following correctness criteria (we use $f: X \rightarrow Y$ and $c: X \times K \rightarrow Y$ where $K = \{0,1\}^{m}$, $X = \{0,1\}^{n}$ and $Y = \{0,1\}$ to denote the Boolean functions of $f$ and $c$ respectively):
+$$ c(x,k^{*}) = f(x) \, \, \forall x \in X, $$
+and 
+$$ \exists  x \in X \,\, s.t. \,\, c(x,k) \neq c(x,k^{*}) \, \, \forall k \in K.$$ 
+\end{definition}
+%For any $x \in X$, the function outputs $y \in Y$ and we say $y = f(x)$.
+
+%To obfuscate the implementation, the defender introduces $m$ key bits, and selects a key $k^{*} \in \{0,1\}^{m}$ uniformly at random. 
+
+%The function that the defender implements (which the attacker sees) is 
+%$c: X \times K \rightarrow Y$ where $K = \{0,1\}^{m}$. 
+%For any $x \in X$ and $k \in K$, the function outputs $y \in Y$ and we say $y = c(x,k)$.
+
+%The implementation must satisfy the following:
+These requirements guarantee that: (1) when the defender applies the correct key, $k^{*}$,
+$c$ provides correct outputs for all inputs; (2) when the attacker applies an incorrect, the resulting circuit differs from the correct one for at least one input.
+
+We further extend our definition by allowing a synthesis procedure to be randomized; that is, provided the same circuit description and key as input, two separate executions of the synthesis procedure can result in different outputs (however both must still satisfy the correctness criteria mentioned above).
+
+\subsection{A Notion of Security for Logic Locking}
+ Based on the previous defintion for a locking synthesis procedure, we now describe our notion of securrity. The notion is very simple, for every We therefore propose that, unless the procedure guarantees \emph{by construction}, and \emph{for every circuit}, that each key is equally likely regardless of the procedure's output (as ensured by our necessary condition for secure synthesis), such a locking procedure should \emph{not} be considered secure.
+
+%Following the principles of secure design, we do not assume a synthesis procedure to be secret; rather we base our security on the secrecy of the correct key $k^*$.
 
 \subsection{A Necessary Condition}
-Intuitively, a synthesis procedure must at a minimum make it ``hard" --- if at all possible --- for a malicious entity at a fab to recover the correct key from an encrypted design. To make an analogy to the traditional setting of encryption, this is similar to say that it must be hard or impossible for an eavesdropper to correctly guess a sender's secret key simply by observing encrypted communication between the sender and a receiver \footnote{the settings are not exactly the same as unlike most settings where encryption is used, here the ``eavesdropper" only gets to read a \emph{single} message; the sender also gets to change the encryption key prior to sending a new communication}. Cryptographic protocols usually ensure this by making key deduction equivalent (or at least as hard as) solving a computational problem known to be xxxx hard. Common examples are integer factoring and the discrete logarithm problems \cite{}. This is know as the computational hardness approach to security \cite{}.
 
-Another approach, the information theoretic one \cite{} is to xxxx make a plaintext absolutely independent of the ciphertext, \footnote{In cryptography, this is known to be possible to achieve only when the key space is as large as the message space \cite{}. Therfore, information theoretic security, while intuitively preferrable, is usually foregone in xxxx of computational security, which is possible to achieve even given key spaces of limited size (security is parameterized by the key length)}where independence is xxxx in a probabilitstic sense, i.e., if $X$ is a random variable that denotes the plaintext, and $Y$ is the random variable that denotes the ciphertext, then the probability distributions of the two variables must satisfy:
 
-$$ P(X|Y) = P(X) $$
+In the following, let $C(f,k)$ be the random variable describing the output of a synthesis procedure when invoked with description $f$ and key $k$ as input.
+\begin{definition}
+A locking synthesis procedure is secure only if the following condition holds for every behavioural description $f$ and key $k$. For every $k'\neq k$ and $c$ in the support of $C(f,k)$, there exists a behavioural description $f'$ such that
+%variables $C(f,k)$ and $C(f',k')$ are statistically indistinguishable. We could opt to require the distributions of $C(f,k)$ and $C(f',k')$ to be perfectly indistinguishable instead; i.e., for each $c$ in the support of $C(f,k)$, 
+$P[C(f,k)=c]\leq P[C(f',k')=c]$
+%$$ P(K|C)=P(K) $$ 
+(probabilities are taken over the synthesis procedure's coin flips). If the synthesis procedure is to satisfy the correctness criteria, such $f'$ cannot be functionally equivalent to $f$.
 
-In our setting, we seek to protect the locking key; and what the attacker has access to is an encrypted netlist output by a synthesis procedure as defined in Section ??. We there argue that a \emph{necessary} condition of secure synthesis is:
+%A locking synthesis procedure is secure if for a every behavioural description $f$ and key $k$, the synthesis output $C$ and key $K$ satisfy 
+%$$ P(K|C)=P(K) $$
+%where the probabilities above are computed assuming each of the $2^{2^n}$ behaviours that can be provided as input to the synthesis procedure --- are equally likely.
+\end{definition}
+
+This condition does not require $f'$ to be ``likely" to be provided by a chip designer as input to the synthesis procedure, which is why we characterize it as only necessary. It suffices, however, to protect against attacks like ours, where the attacker uses information about the publicly available synthesis procedure to desynthesize the netlist; but does not leverage heuristic knowledge of HDL coding practices.
+
+\begin{definition}
+If we define a locking synthesis procedure as accepting a \emph{Boolean function} (rather than a behavioural description of a function), and require, further, that the procedure's output is insensitive to the way the input Boolean function is represented (in other words, that the synthesis procedure is an indistinguishability obfuscator), we can then define our notion of security as follows. Simply, for every $(f,k)$ pair and every $k'\neq k$, there exists a Boolean function $f'$ such that $P[C(f,k)=c]=P[C(f',k')=c]$ for every $c$ in the support of $C(f,k)$.
+\end{definition}
+
+ We note, however, that most practical synthesis tools cannot be precisely characterized as accepting Boolean functions; rather, they typically accept an abstract form of desired circuit behaviour (written for example in an HDL). 
+ 
+ The next definition justifies requiring the synthesis tool to function as an IO; if we need the procedure to be resilient to attacks where the attacker might leverage domain knowledge of HDL coding practices.
+
+\begin{definition} Let $F_n$ be the set of all Boolean functions $f_n$ of $n$ variables. For Boolean function $f_n$, let $\gamma_{f_n}$ be the set of all behavioural descriptions (of any size) that implement $f_n$. We model a developer of $n$-input circuits as a distribution ensemble $D_n=\{D_{f_n}\}_{f_n\in F_n}$ where distribution $D_{f_n}:\gamma_{f_n}\rightarrow [0,1]$ describes developer $D_n$'s inclination to describe $f_n$ using each element of $\gamma_{f_n}$. For developer $D_n$, let $C_{D_n}$ denote the random variable describing the output of the synthesis procedure (when the function $f_n$ is selected uniformly at random from $F_n$, and a description is sampled according to $D_{f_n}$). A locking synthesis procedure is secure if for every developer $D_n$ it holds that
+
+$$ P(K|C_{D_n})=P(K) $$
+
+where the probabilities above are taken over the coin flips of the procedure and the developer, and $K$ denotes the locking key.
+\end{definition}
+
+\emph{We note that --- if the synthesis procedure as well satisfies the correctness criteria --- the above condition implies that $P(f_n)>0$ for exactly $2^k$ of the elements of $F_n$ (each of the $2^k$ elements is of course equally likely, by assumption).}
+%require the condition above to hold for every behavioural description whose Boolean function is equivalent to that of $f'$ (and of course, that the Boolean functions of $f'$'s are distinct from $f$). Formally, for every $g\equiv f'$, 
+%the distributions of $C(g,k')$ and $C(f,k)$ should be perfectly/statistically indistinguishable.
+%$P[C(f,k)=c]\leq P[C(g,k')=c]$. 
+
+%We should note however that by doing so, we automatically obtain an indistinguishability obfuscator (if, post synthesis, we set the key bits to their correct values).
 
 \begin{proposition}
-A locking synthesis procedure as defined in Section ?? is secure only if for every behavioural description $f$, the synthesis output $C$ and key $K$ satisfy 
-$$ P(K|C)=P(K) $$
-where the probabilities above are computed assuming each of the $2^{2^n}$ behaviours that can be provided as input to the synthesis procedure --- are equally likely, and that for each behaviour, all descriptions are equally likely to be provided as input.
+If, post synthesis, we set the key bits to their correct values, a locking synthesis procedure secure according to the definition above functions as an indistinguishability obfuscator.
 \end{proposition}
 
-The condition in Proposition ?? ensures that given the unencrypted netlist, knowledge of the encrypted netlist does not reduce uncertainty about the locking key. %Is this condition sufficient by itself to guarantee impossibility of key recovery? No. As a counter-example, consider a synthesis procedure that produces, for an input behavioral description, a implementation that, for all keys other than the correct one, behaves as specified by the input description, for all inputs save one (a fixed value for all keys). The construction in Figure?? is one example of such implementation The comparator checks wether the input key . Such synthesis procedure is clearly secure according to Condition 1; the input correct key value is not used at all when constructing the encrypted design; therefore the locked design produced is the same for all input keys, i.e., it is independent of the correct key value. Such a locking 
+\begin{proof}
+An indistinguishability obfuscator is a (possibly randomized) program that transforms a circuit into an equivalent one and additionally has the following property: if $p_1$ and $p_2$ are two functionally equivalent circuits, the distributions of $IO(p_1)$ and $IO(p_2)$ are statistically indistinguishable ($IO(p)$ denotes the output of the indistinguishability obfuscator when invoked on circuit $p$). Suppose a synthesis procedure satisfied the security notion defined above but did not function as an indistinguishability obfuscator in this sense. This implies that there exists a key $k$, two descriptions $d_1$ and $d_2$ of the same Boolean function $f$, and a $c$ in the support of $C(d_1,k)$ such that $P[C(d_1,k)=c]\neq P[C(d_2,k)=c]$. Now consider a developer $D$ that implements $f$ using $d_1$ or $d_2$ with equal probabilities. For this developer, observing that the output of the synthesis procedure is $c$ changes the prior on $d_n$, which violates the requirement that $P(K|C)=P(K)$.
+\end{proof}
+
+Both notions of security defined above allow a much simpler construction for a secure procedure than our BDD idea. The construction is as follows: XOR $f$'s output with the output of a point function (whose password is the locking key), pass through an indistinguishability obfuscator, XOR the result with the output of a comparator that takes the input and key lines as arguments). The problem here of course is that the output corruptability for an incorrect netlist is very low. The BDD idea could have an advantage here.
+
+\begin{definition}[A notion of security based on indistinguishability, or semantic security]
+A locking synthesis procedure is secure if the probability of a PPT adversary winning the following game is negligible (in the key length $k$): the adversary knows the details of the locking procedure, and he performs polynomial time computations of his choice. He then provides the the locking oracle with two circuits $c_1$ and $c_2$ of his choice (they only get to do this \emph{one time}). The locking oracle selects one of $c_1$ and $c_2$ uniformly at random, locks the selected circuit using her locking key, and provides a locked circuit to the adversary. The adversary performs polynomial-time computations of his choice and then guesses which of $c_1$ and $c_2$ was selected by the locking oracle. The adversary wins the game is his guess is correct.
+\end{definition}
+
+The above notion of security may be regarded as too strong. First of all, we do not require every aspect of the design to be protected (none of the existing locking scheme live up to this). We only require that recovering the locking key be impossible (and that programming the key register with an incorrect key results in functionality that is controllably different from the correct functionality). Perhaps we could require the two circuits $c_1$ and $c_2$ provided by the adversary to the oracle to be functionally nonequivalent (we discussed yesterday that if the attacker knows the functionality of the design, we consider him to have broken the locking scheme). I'm not sure how this would make constructing a secure procedure easier; but constructing a universal BDD does seem to be easier than constructing a universal circuit. We can also argue that revealing a BDD's structure (sans edge labellings) is acceptable in our setting, and thus we would only need as many key bits as there are nodes in the BDD.
+
+In any case, the following construction satisfies the above notion of security: the locking procedure first uses any one-time indistinguishable encryption algorithm to encrypt the input behavioural description. The locked circuit then consists of a circuit implementing the corresponding decryption algorithm (whose plaintext inputs are hardwired to the obtained ciphertext), followed by a universal circuit. This construction would probably have too much area, power and delay overhead to be practical in our setting.
+
+%In this section, we argue that XOR locking (Section ??), and to the best of our knowledge, must not be considered secure; as they all fail to satisfy basic requirement of any information hiding scheme with no c. We Following the principles of secure design, we do not assume a synthesis procedure to be secret; rather we base our security on the secrecy of the correct key $k^*$.
+
+%\subsection{A Necessary Condition}
+%Intuitively, a synthesis procedure must at a minimum make it ``hard" --- if at all possible --- for a malicious entity at a fab to recover the correct key from an encrypted design. To make an analogy to the traditional setting of encryption, this is similar to say that it must be hard or impossible for an eavesdropper to correctly guess a sender's secret key simply by observing encrypted communication between the sender and a receiver \footnote{the settings are not exactly the same as unlike most settings where encryption is used, here the ``eavesdropper" only gets to read a \emph{single} message; the sender also gets to change the encryption key prior to sending a new communication}. Cryptographic protocols usually ensure this by making key deduction equivalent (or at least as hard as) solving a computational problem known to be xxxx hard. Common examples are integer factoring and the discrete logarithm problems \cite{}. This is know as the computational hardness approach to security \cite{}.
+
+%Another approach, the information theoretic one \cite{} is to xxxx make a plaintext absolutely independent of the ciphertext, \footnote{In cryptography, this is known to be possible to achieve only when the key space is as large as the message space \cite{}. Therfore, information theoretic security, while intuitively preferrable, is usually foregone in xxxx of computational security, which is possible to achieve even given key spaces of limited size (security is parameterized by the key length)}where independence is xxxx in a probabilitstic sense, i.e., if $X$ is a random variable that denotes the plaintext, and $Y$ is the random variable that denotes the ciphertext, then the probability distributions of the two variables must satisfy:
+
+%$$ P(X|Y) = P(X) $$
+
+%In our setting, we seek to protect the locking key; and what the attacker has access to is an encrypted netlist output by a synthesis procedure as defined in Section ??. We there argue that a \emph{necessary} condition of secure synthesis is:
+
+%\begin{proposition}
+%A locking synthesis procedure as defined in Section ?? is secure only if for every behavioural description $f$, the synthesis output $C$ and key $K$ satisfy 
+%$$ P(K|C)=P(K) $$
+%where the probabilities above are computed assuming each of the $2^{2^n}$ behaviours that can be provided as input to the synthesis procedure --- are equally likely, and that for each behaviour, all descriptions are equally likely to be provided as input.
+%\end{proposition}
+
+%The condition in Proposition ?? ensures that given the unencrypted netlist, knowledge of the encrypted netlist does not reduce uncertainty about the locking key. %Is this condition sufficient by itself to guarantee impossibility of key recovery? No. As a counter-example, consider a synthesis procedure that produces, for an input behavioral description, a implementation that, for all keys other than the correct one, behaves as specified by the input description, for all inputs save one (a fixed value for all keys). The construction in Figure?? is one example of such implementation The comparator checks wether the input key . Such synthesis procedure is clearly secure according to Condition 1; the input correct key value is not used at all when constructing the encrypted design; therefore the locked design produced is the same for all input keys, i.e., it is independent of the correct key value. Such a locking 
 %We therefore introduce another condition for secure synthesis:
 %\begin{proposition}
 %A synthesis procedure as defined in Section ?? is secure only if 
 %\end{proposition}
 %Such a condition rules out procedures like the one in Figure ??.
-Note that we assume that for every behaviour, all descriptions are equally likely \footnote{It can be argued that not all descriptions are likely for a given desired behaviour; e.g, if the circuit is required to produce $0$ identically as output, this is more likely to be specified in VHDL as an output port being set to zero; rather than the AND of two intermediate signals that are complements of each other. This is just an extreme example; a reader experienced in VLSI design will identify more realistic ones.}. This is why the condition is necessary.
-
-\subsection{Are Existing Schemes Secure?}
-In Section ??, we report experimental evidence that a sample locking procedure --- XOR locking --- is not secure as a simple attack manages to recover more bits of the correct key that should be possible by random chance. Here, we make make an informal argument why --- due to the way they work in general --- none of the existing locking schemes satisfies our necessary condition for secure synthesis.
-
-A quick look at locking schemes that have been proposed in the literature reveals a general trend to refrain from perform locking on the RTL; but to rather do it on some a technology-mapped netlist (as in the case ofo \cite{} and \cite{}), or unspecified (but implied to be a network, as in \cite{}). This to justifiable to some extent: one can argue that locking is more easily done on a network-representation of a circuit; rather than an abstract form of desired behaviour (such as a Verilog or VHDL code). To see this, consider that the opportunities for modification are generally higher in a Boolean network than in a corresponding RTL description (a single Verilog line of code such as z = a + b where a and b are 32-bit registers will be converted by a Verilog compiler to a network with at least 32 XOR gates, each of which is candidate for modification by a locking algorithm, e.g. one that inserts XOR gate). The second correctness criterion is also easier to satisfy when working on Boolean network rather than RTL. For example in the context of XOR locking, one can use an automatic test pattern generation tool to make sure that two stuck-at-faults at the selected wires do not cancel each other out, thereby rendering some incorrect key equivalent to the correct one, in the sense that applying the incorrect key results in correct circuit behaviour. Given that ATPG tools accept netlists as input, it is attractive to defer locking till at least some form of synthesis has been performed (e.g, until a corresponding multi-level network has been constructed by the synthesis tool, as a first step to prepare the network for optimization).
-
-In this paper, we argue that performing locking post-synthesis (or in general, after some optimizing transformation has been applied on the RTL) in a logic locking scheme, introduces a subtle vulnerability in the scheme. The vulnerability comes about as a result of the fact that --- Unlike ``raw" RTL (pre-synthesis) --- in an optimized network, different parts of the network are no longer ``independent" of each other as they were before synthesis. Consider, for instance, an optimizing transformation that looks for sequences of inverters in a netlist, and replaces each with a single (or no) inverter (preserving the Boolean function implemented by the network). This is a very simple transformation to apply on a circuit netlist, and one that presumably any worthwhile logic synthesis tool should implicitly or explicitly perform. Now assume that the step of moving inverters up and down the netlist in the XOR locking scheme is removed from the procedure. A sequence of two inverters will then be a dead giveaway that the correct value of the key bit feeding the preceding XOR gate is a 1 (and so an inverter has been placed by the locking procedure after the XOR gate to ensure the first correctness criterion is satisfied). This is of course a trivial example, and it only fair to assume that the authors of the XOR locking procedure introduced the inverter moving step to prevent such an easy attack. Our point is that unless the procedure guarantees \emph{by construction}, and \emph{for every circuit}, that each key is equally likely regardless of the procedure's output (as ensured by our necessary condition for secure synthesis), such a locking procedure should \emph{not} be considered secure.
+%Note that we assume that for every behaviour, all descriptions are equally likely \footnote{It can be argued that not all descriptions are likely for a given desired behaviour; e.g, if the circuit is required to produce $0$ identically as output, this is more likely to be specified in VHDL as an output port being set to zero; rather than the AND of two intermediate signals that are complements of each other. This is just an extreme example; a reader experienced in VLSI design will identify more realistic ones.}. This is why the condition is necessary.
 
 We now propose a candidate locking procedure that not only meets our necessary condition for secure synthesis, but also allows to easily ensure the correctness criteria of locking synthesis are satisfied. We first provide a brief introduction to a concept in  that is critical to understanding our technique, that is of binary decision diagrams. 
 %A reader familiar with binary decision diagrams can skip directly to Section ??.
