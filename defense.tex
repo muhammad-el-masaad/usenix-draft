@@ -102,7 +102,19 @@ An indistinguishability obfuscator is a (possibly randomized) program that trans
 % We note, however, that most practical synthesis tools cannot be precisely characterized as accepting Boolean functions; rather, they typically accept an abstract form of desired circuit behaviour (written for example in an HDL). 
  
 \begin{definition}[Other candidate notions of security]
-Both notions of security defined above make somewhat unrealistic assumptions (after all, there is arguably no use for a design house to design a circuit that outputs $0$ identically; but our assumption implies that such functionality is as likely as any other to be supplied to a locking scheme). Unfortunately, it appears that the only way is to make use of cryptographic promitives ,the overhead of which 
+Both notions of security defined above make somewhat unrealistic assumptions about the possible designs that might be provided by a rights holder to the synthesis procedure (after all, there is arguably no use for a design house to design a circuit that outputs $0$ identically; but our assumption implies that such functionality is as likely as any other to be supplied to a locking scheme). An intersting question is whether it is possible to design schemes that make no assumptions whatsoever regarding the adversary's prior information about the design (functionality, description, or otherwise).
+
+The answer to this question is yes. It is possible to construct such schemes. We simply treat circuits as messages to be encrypted, use a semantically secure message encryption scheme to encrypt our designs. We provide the fab with our encrypted design, an implementation of the decryption procedure that takes, followed by a uiversal circuit that executes the design once it is decrypted. 
+%do this by borrowing tools from the field of cryptography, where it has long been known that it is possible to design 
+
+Semantically secure message encryption schemes ensure (by construction) that a generated ciphertext reveals no information about the plaintext that can \emph{feasibly} be computed. In our case, this ensures that no matter what prior information the fab has about the design (functionality, or otherwise),; providing the fab with a maskset generated from a netlist so-locked does not .
+
+This seems to be good news; the downside is that 
+%Unfortunately, it appears that the only way is to make use of cryptographic promitives ,the overhead of such techniques might be too xxx to enable a practical application.
+The good news in our case is that we can use one-time, which appear to be somewhat easier to implement that a full-fledged . For example, a simple then use a pseudorandom bit generator to expand the key\cite{}. An attacker . There is also the question of whether it might incur less overhead to simple (remember that in the logic locking setting, there is no overhead of key communication, )
+
+\subsection{Conclusion}
+To 
 A locking synthesis procedure is secure if the probability of a PPT adversary winning the following game is negligible (in the key length $k$): the adversary knows the details of the locking procedure, and he performs polynomial time computations of his choice. He then provides the the locking oracle with two circuits $c_1$ and $c_2$ of his choice (they only get to do this \emph{one time}). The locking oracle selects one of $c_1$ and $c_2$ uniformly at random, locks the selected circuit using her locking key, and provides a locked circuit to the adversary. The adversary performs polynomial-time computations of his choice and then guesses which of $c_1$ and $c_2$ was selected by the locking oracle. The adversary wins the game is his guess is correct.
 \end{definition}
 
