@@ -56,11 +56,16 @@ Logic locking works by inserting
 additional gates, referred to as \emph{key gates}, 
 in a Boolean 
 logic netlist with 
-side-inputs that are referred to as \emph{key bits} and 
+side-inputs that are referred to as \emph{key bits}. The key bits 
+are 
 stored in a key register. 
 The netlist functions as intended \emph{only} 
-for a certain key, and provides ``junk" 
+for a certain key, and provides ``junk" [better word?]
 outputs otherwise. 
+The original logic locking procedure proposed by Roy et al. 
+inserts XOR/XNOR gates at randomly chosen locations in the 
+net-list. However, several other logic locking mechanisms have been proposed in literature that use different types of key gates or 
+different procedures to insert key gates~\cite{}. 
 
 The correct key, i.e., 
 the key bits that produce the designer's intended 
@@ -73,54 +78,112 @@ is premised on the foundry not knowing the correct key.
 If the correct key is compromised, the foundry learns of the 
 chip's functionality.\footnote{In fact, the protocol proposed by Roy et al. introduces two keys --- a master key that is common to each chip, and a per-instance chip key. See Section~\ref{sec:discussion} for more details? [how to word?]} 
 
-The original logic locking procedure proposed by Roy et al. 
-inserts XOR/XNOR gates at randomly chosen locations in the 
-net-list. However, several other logic locking mechanisms have been proposed in literature that use different types of key gates or 
-different procedures to insert key gates~\cite{}.   
-However, recent work by Princeton et al.~\cite{} has 
+  
+Recent work by Subramanyan et al.~\cite{} has 
 established 
-that \emph{all} of these techniques 
+that all
+of the logic locking techniques proposed in literature
 are vulnerable to attack \emph{if} the 
-untrusted foundry obtains a 
+untrusted foundry can obtain a 
 working copy of the chip, i.e., 
 a chip activated with the correct key. 
 Note that the foundry cannot directly 
 probe the activated chip for the key, but instead 
 must infer it from 
 the chip's input/output (IO) functionality.   
-Princeton 
-et al.~\cite{} propose an iterative, SAT-based procedure 
-that successfully recovers the correct key for large 
-circuits locked 
-with a number of techniques proposed in literature. 
-[Concurrently, El Massad proposed identical attack for IC camouflaging, that addresses a slightly different defense mechanism.]
+Subramanyan
+et al.~\cite{} propose an attack procedure that 
+iteratively applies new inputs to the working chip and 
+uses a SAT solver to 
+(implicitly) eliminate incorrect keys. 
+The procedure terminates when 
+all but the correct key is [are?] eliminated. 
+[too much detail?]
+Subramanyan et al. show that procedure is 
+remarkably effective in unlocking even large circuits locked 
+with up to XXX keys. Concurrently, El Massad et al.~\cite{} 
+have proposed a similar attack on IC camouflaging, 
+a different but conceptually related hardware 
+defense mechanism.
 
-Princeton and El-Massad's work has established that 
+The work of 
+Subramanyan et al.~\cite{} and El-Massad et al.~\cite{} 
+has established that 
 existing logic 
 locking mechanisms are insecure, but 
 under \emph{conservative}  
 assumptions on the attacker's capabilities.
-[Is it clear what we mean? Maybe, under impractical assumptions..] 
+[Is it clear what we mean by conservative? Maybe, under impractical assumptions..] 
 That is, for the
-attack to succeed, the attacker, i.e., the foundry that is fabricating the chip,must have access to a previously fabricated and 
+attack to succeed, the attacker, i.e., the untrusted foundry fabricating the chip, 
+must have access to a previously fabricated and 
 activated copy of the chip.
 Such a strong attack model 
 is unrealistic in several scenarios of 
 practical interest. 
 
-***Flesh out this para
-For one, a foundry may not be able to 
-acquire a working copy of a chip that is  
-non-consumer electronics [better word/phrase]. 
-These include chips designed by government entities [satellites/military 
-hardware/critical infrastructure]. Second, even for consumer electronics, first time chip is being taped out [typically when locking is most critical]. 
-Finally, locking used to obfuscate an algorithm/mechanisms that has no observable impact on I/O, btu for instance, only on timing/speed. 
+%For one, the attack model above presupposes that the 
+%chip has been previously fabricated. On the other hand, 
+For one, a foundry is unlikely to 
+be obtain working copies of 
+chips fabricated by government agencies for 
+critical infrastructure, defense and space applications 
+since these are not available in the market.  
+Second, even in the consumer electronics segment, a foundry 
+has no access to working copies of
+chips that are being fabricated for the first time. 
+In fact, the first fabrication run is precisely 
+when designer's 
+might be most interested in using logic locking techniques to 
+protect new [and proprietary?] features introduced in the chip. 
+[See ltx for third argument. Required?]
+%Finally, locking used to protect an algorithm/mechanisms that has no observable impact on I/O, but helps improve speed/performance. 
 
-So far, the implicit assumption has been that logic locking 
-is secure in the more practical setting in which the 
-foundry does \emph{not} have access to a working [activated?] chip. 
-In this paper, we examine this assumption critically. 
-  
+This leads to the following natural question: \emph{are existing 
+logic locking mechanisms secure in the more 
+practical setting in which the attacker only has access to the 
+locked netlist?} The implicit answer to the question 
+has in the literature been in the affirmative. 
+%\emph{not} have access to a working chip. 
+[MEM: Has this been made explicit somewhere? If so, cite]
+The first contribution of our work is 
+to refute this implicit assumption. 
+We show that netlists locked using 
+existing mechanisms leak information about the key, even if the attacker does not have a working copy of the chip.
+We demonstrate the vulnerability 
+of existing logic locking mechanisms using a simple counter-example (see Section~\ref{}), and then by implementing a new attack 
+procedure. We refer to this new attack as the
+\emph{desynthesis attack}. 
+
+Our attack, detailed in 
+Section~\ref{}, builds on the observation that all existing 
+logic mechanisms propose to insert key gates 
+in a \emph{synthesized} 
+Boolean logic netlist. 
+Synthesis refers to 
+the translation 
+of a behavioural description of 
+desired Boolean functionality, described for instance in 
+a hardware description language (HDL) like Verilog, to a 
+concrete implementation, a network 
+of Boolean logic gates. Boolean logic is 
+synthesized using 
+commercial off-the-shelf synthesis tools. As with software 
+compilers, synthesis tools output implementations with low 
+cost; ideally the lowest cost. 
+Herein lies the rub; for every incorrect key, there 
+exists a different implementation with lower cost.
+[DANGER: critic will say, how do you know which synthesis tool. 
+Reply: there are only a few. Proprietary solutions obtain security 
+via obscurity.]
+
+To address this 
+
+%We design a new attack, which we refer to as a 
+%\emph{desynthesis} attack, [.....]
+%locked netlists leak information about the key.   
+
+
 
  
    
