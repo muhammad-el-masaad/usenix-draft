@@ -35,7 +35,7 @@ $c$ provides correct outputs for all inputs; (2) when the attacker applies an in
 We further extend our definition by allowing a synthesis procedure to be randomized; that is, provided the same circuit description and key as input, two separate executions of the synthesis procedure can result in different outputs (however both must still satisfy the correctness criteria mentioned above).
 
 \subsection{A Notion of Security for Logic Locking}
- Based on the previous definition for a locking synthesis procedure, we now describe our notion of security. The notion is very simple: for every behavioural description, and every key combination (including the correct key), we require that there be a (necessarily distinct) behavioral description, that when locked using the key combination, produces the same locked netlist that the fab observes. 
+ Based on the previous definition for a locking synthesis procedure, we now describe our notion of security. The notion is very simple: for every behavioural description, and every key combination (including the correct key), we require that there be a (necessarily distinct) behavioral description, that when locked using the key combination, produces the same locked netlist that the fab observes. [We could also define security as follows: ]
  
  %We therefore propose that, unless the procedure guarantees \emph{by construction}, and \emph{for every circuit}, that each key is equally likely regardless of the procedure's output (as ensured by our necessary condition for secure synthesis), such a locking procedure should \emph{not} be considered secure.
 

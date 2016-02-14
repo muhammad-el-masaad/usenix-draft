@@ -1,129 +1,32 @@
 \section{Experimental Evaluation and Results}
 
 
-%Results below are for the case where XOR gates are inserted at random, and inverters are left where they are (no moving inverters up and down the netlist). No care is taken to avoid critical paths in the netlist when inserting inverters, but output wires are avoided. 
 
-%When initial guess is selected at random, 15-19 bits of a 24-bit key are successfully recovered. (didn't study the effect of key gate locations on performance of the attack)
+\begin{table*}[ht]
+\centering
+\caption{Performance of hill-climbing MSE attack on 11 sequential benchmarks from the MCNC set. Numbers are average number of key bits correctly recovered by attack for 5 runs on each benchmark.}
+\label{my-label}
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|}
+\hline
+\multirow{4}{*}{} & \multicolumn{12}{c|}{Number of Key Bits}                                                                                                                        \\ \cline{2-13} 
+                  & \multicolumn{4}{c|}{32}                             & \multicolumn{4}{c|}{64}                             & \multicolumn{4}{c|}{128}                            \\ \cline{2-13} 
+                  & \multicolumn{3}{l|}{Correctly Recovered} &          & \multicolumn{3}{l|}{Correctly Recovered} &          & \multicolumn{3}{l|}{Correctly Recovered} &          \\ \cline{2-13} 
+                  & Min         & Max         & Avg.         & Time (s) & Min         & Max         & Avg          & Time (s) & Min         & Max         & Avg          & Time (s) \\ \hline
+dk16              &           &           & 24.5         &          &           &           &          &          &           &           &          &          \\ \hline
+ex1              &           &           & 23.7         &          &           &           &            &          &           &           &          &          \\ \hline
+keyb             &           &           & 22.4         &          &           &           &          &          & 
+&           &          &          \\ \hline
+planet1             &           &           & 21.13         &          &           &           &          &         &           &           &          &          \\ \hline
+planet             &           &           & 20.8         &          &           &           &          &         &           &           &          &          \\ \hline
+s1a             &           &           &          &          &           &           &          &         &           &           &          &          \\ \hline
+s1             &           &           &          &          &           &           &          &         &           &           &          &          \\ \hline
+sand             &           &           &          &          &           &           &          &         &           &           &          &          \\ \hline
+scf             &           &           &          &          &           &           &          &         &           &           &          &          \\ \hline
+styr             &           &           &          &          &           &           &          &         &           &           &          &          \\ \hline
+tbk             &           &           &          &          &           &           &          &         &          &           &          &          \\ \hline
 
-%24, 21, 22, 23, 22  32
-%7, 15, 11, 14, 13  48
-%17, 16 64
-
-%Even when the initial guess is the exact complement of the correct key, a significant portion of key bits is correctly recovered.
-
-\begin{table*}
-\caption{Results for the hill-climbing MSE attack on c880. }
-\begin{tabular}{ | c | c | c | }
-\hline
-Key length & Number of correctly recovered bits & Time taken (s) \\
-\hline
-32-bit & 16 & 431.3 \\
-& 14 & 389.4\\
-& 15 & 401.6\\
-& 20 & 380.7\\
-& 17 & 380.6\\
-Avg. & 16.4 &\\
-\hline
-64-bit & 31 & 929.4\\
-& 37 & 1361.5\\
-& 36 & 1442.1\\
-& 33 & 1346.6\\
-& 34 & 1299.1\\
-Avg. & 34.2 & \\
-\hline
 \end{tabular}
 \end{table*}
-
-\begin{table*}
-\caption{Output corruptibility numbers for the hill-climbing MSE attack on c880 obfuscated with 32 key gates. }
-\begin{tabular}{ | c | c | p{5cm} | c | }
-\hline
-Average Corruptibility  & Corruptibility of recovered key  & No. of correctly recovered bits & MSE\\
-\hline
-9.68 & 11.73 & 15 & 81\\
-
-11.17 & 9.54 & 21 & 14\\
-
-12.18 & 7.58 & 18 & 74\\
-
-13.21 & 14.58 & 16 & 32\\
-
-11.60 & 11.73 & 18 & 50\\
-\hline
-\end{tabular}
-\end{table*}
-
-\begin{table}
-\caption{Results for the hill-climbing attack based on the absolute difference in number of nodes and edges on c880}
-\begin{tabular}{ | c | c | c | }
-\hline
-Key length & Number of correctly recovered bits & Time taken (s) \\
-\hline
-32-bit & 23&                                                         1645.87\\
-&24&                                                         1458.24\\
-&27&                                                         1667.95\\
-&25&                                                         1653.95\\
-&25&                                                         1813.47\\
-Avg. & 24.8 &\\
-\hline
-64-bit & 48 &                                                         5385.41 \\
-& 44 &                                                         4790.02 \\
-&48&                                                         4686.72 \\
-&48&                                                         5035.48 \\
-& 47&                                                         3780.07\\
-Avg. & 47&\\
-\hline
-\end{tabular}
-\end{table}
-
-\begin{table*}
-\caption{Results for the absolute-delay-difference based exhaustive and hill-climbing attacks on c880 obfuscated with 12 and 32 key gates. Delay difference is between observed netlist and the one resulting from unmapping the network then re-mapping it. }
-\begin{tabular}{ | c | c | p{5cm} | c | }
-\hline
-Key length Average Corruptibility  & Corruptibility of recovered key  & No. of correctly recovered bits \\
-\hline
-12-bit & 5.48 & 2.12 & 10\\
-
-& 5.44 & 1.19 & 10\\
-
-& 5.33 & 3.19 & 8\\
-
-& 5.19 & 6 & 7\\
-
-& 4.81 & 1.19 & 10\\
-\hline
-32-bit & 5.48 & 2.12 & 10\\
-
-& 11.48 & 9.54 & 22\\
-
-& 12.25 & 11.46 & 19\\
-
-& 10.11 & 4.38 & 23\\
-
-& 12.16 & 11 & 18\\
-\hline
-\end{tabular}
-\end{table*}
-
-\begin{table}
-\caption{Results for the delay-based exhaustive attack on c880 (The \emph{choice; map; ps} command sequence of the ABC synthesis tool is repeatedly executed until we get three consecutive delay increases or the area stops improving)}
-\begin{tabular}{ | c | c | c | c | }
-\hline
-Hamming distance & 0 & 2 & 5 \\
-&1& 4 & 3 \\
-&1& 3 & 2 \\
-&2& 1 & 2 \\
-&3& 1 & 4 \\
-\hline
-Key Size & 10-bit & 11-bit & 12-bit \\
-\hline
-\end{tabular}
-\end{table}
-
-\subsection{Performance Evaluation on Benchmark Circuits}
-To provide an insight on the once can expect from locking a VLSI design using our procedure, we implement our procedure using PHP and the ABC system \cite{} for BDD construction, and use the implemented tool chain to encrypt sequential circuits from the MCNC benchmark suite. As a baseline, we also report the overhead of locking the same circuits using XOR locking. The results are reported in Table ??.
-
-We note that one can use other, more BDD-targeted synthesis tools (the BDS and FDD tools from the Universities of Amherst and Toronto, respectively for example) in place of ABC as a backend --- to obtain implementations with potentially less area and delay overheads. Whether such tools are better equipped to synthesis circuits resulting from our locking synthesis tool-chain, we leave as topic for future work.
 
 \begin{table*}
 \caption{Performance of hill-climbing MSE attack on 11 sequential benchmarks from the MCNC set. Numbers are average number of key bits correctly recovered by attack for 5 runs on each benchmark. }
@@ -149,6 +52,21 @@ tbk	& 22.2 & & 17.6 &	36 & & 34.2 & & \\
 \hline
 \end{tabular}
 \end{table*}
+
+%Results below are for the case where XOR gates are inserted at random, and inverters are left where they are (no moving inverters up and down the netlist). No care is taken to avoid critical paths in the netlist when inserting inverters, but output wires are avoided. 
+
+%When initial guess is selected at random, 15-19 bits of a 24-bit key are successfully recovered. (didn't study the effect of key gate locations on performance of the attack)
+
+%24, 21, 22, 23, 22  32
+%7, 15, 11, 14, 13  48
+%17, 16 64
+
+%Even when the initial guess is the exact complement of the correct key, a significant portion of key bits is correctly recovered.
+
+\subsection{Performance Evaluation on Benchmark Circuits}
+To provide an insight on the once can expect from locking a VLSI design using our procedure, we implement our procedure using PHP and the ABC system \cite{} for BDD construction, and use the implemented tool chain to encrypt sequential circuits from the MCNC benchmark suite. As a baseline, we also report the overhead of locking the same circuits using XOR locking. The results are reported in Table ??.
+
+We note that one can use other, more BDD-targeted synthesis tools (the BDS and FDD tools from the Universities of Amherst and Toronto, respectively for example) in place of ABC as a backend --- to obtain implementations with potentially less area and delay overheads. Whether such tools are better equipped to synthesis circuits resulting from our locking synthesis tool-chain, we leave as topic for future work.
 
 %c880 (no random restarts) 
 %24 17 72.38 18 66.75 14 43.2 20 67.23 16 82.57
@@ -197,80 +115,6 @@ tbk	& 22.2 & & 17.6 &	36 & & 34.2 & & \\
 
 
 
-\begin{table}[ht]
-\centering
-\caption{Results from preliminary implementation of desynthesis attack. Locations of key gates are 
-picked at random in each experiment, and the experiment is repeated five times. We report the minimum, maximum and average number of key bit recovered correctly, and the average time (in seconds) that the attack took.}
-\label{my-label}
-\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|}
-\hline
-\multirow{4}{*}{} & \multicolumn{12}{c|}{Number of Key Bits}                                                                                                                        \\ \cline{2-13} 
-                  & \multicolumn{4}{c|}{32}                             & \multicolumn{4}{c|}{64}                             & \multicolumn{4}{c|}{128}                            \\ \cline{2-13} 
-                  & \multicolumn{3}{l|}{Correctly Recovered} &          & \multicolumn{3}{l|}{Correctly Recovered} &          & \multicolumn{3}{l|}{Correctly Recovered} &          \\ \cline{2-13} 
-                  & Min         & Max         & Avg.         & Time (s) & Min         & Max         & Avg          & Time (s) & Min         & Max         & Avg          & Time (s) \\ \hline
-alu4              & 17          & 20          & 18.2         &     1179.66     & 39          & 46          & 42.4         &      3562.4    & 77          & 90          & 84.2         &    10823.74      \\ \hline
-c880              & 20          & 23          & 21.2         &      1647.896    & 43          & 45          & 44           &    4735.54      & 82          & 94          & 91.2         &    7947.628      \\ \hline
-s1494             & 18          & 19          & 18.4         &      667.4    & 48          & 50          & 47.8         &    2575.932      & 86          & 89          & 86.4         & 7711.1         \\ \hline
-c1908             & 14          & 22          & 18.2         &      520.66    & 36          & 39          & 47.8         &    1365.758     & 86          & 93          & 89.8         & 5553.688         \\ \hline
-c3540             & 18          & 24          & 18.2         &      1005.52    & 30          & 41          & 37.4         &    2732.614     & 68          & 82          & 75.2         & 9499.594         \\ \hline
-\end{tabular}
-\end{table}
-
-\begin{table*}
-\caption{Area and delay overheads of our BDD-based obfuscation technique when implemented on the alu4 benchmark. }
-\begin{tabular}{ | c | c | c | c | c | }
-\hline
- Key size (bits) & Unobfuscated & 5 & 16 & 32 \\
-\hline
-Number of gates & 620 & - & 1048 & 1360 \\
-Area & 1.0X & $\approx$ 1.0X & 1.7X & 2.19X \\
-Delay & 1.0X & 1.13 & 1.6X & 1.3X \\
-\hline
-\end{tabular}
-\end{table*}
-
-\begin{table*}
-\caption{Area and delay overheads of our BDD-based obfuscation technique when implemented on the alu4 benchmark. }
-\begin{tabular}{ | c | c | c | c | c | }
-\hline
- Benchmark Name & Area Overhead (32-bit) & Delay Overhead (32-bit)  & Area Overhead (64-bit) & Delay Overhead (64-bit) \\
-\hline
-bbara.kiss2&3.91&1.36&5.72&1.68\\
-bbsse.kiss2&2.22&1.27&3.16&1.42\\
-beecount.kiss2&4.04&1.88&11.60&2.36\\
-cse.kiss2&1.72&1.09&0.00&0.00\\
-dk14.kiss2&2.55&1.50&4.08&1.60\\
-dk15.kiss2&3.56&1.32&5.88&1.70\\
-dk16.kiss2&1.46&1.16&1.94&1.24\\
-dk17.kiss2&3.49&1.60&5.69&1.69\\
-dk512.kiss2&3.37&1.45&5.35&1.58\\
-donfile.kiss2&1.75&1.36&2.66&1.38\\
-ex1.kiss2&1.68&1.13&2.28&1.20\\
-ex2.kiss2&2.13&1.38&3.08&1.53\\
-ex3.kiss2&3.23&1.53&5.32&1.58\\
-ex4.kiss2&2.76&1.48&4.31&1.69\\
-ex5.kiss2&3.11&1.41&5.18&1.63\\
-ex6.kiss2&2.96&1.30&4.29&1.42\\
-ex7.kiss2&3.34&1.47&5.40&1.60\\
-keyb.kiss2&1.70&1.08&2.27&1.15\\
-kirkman.kiss2&2.17&1.17&3.02&1.23\\
-mark1.kiss2&2.66&1.55&3.68&1.84\\
-opus.kiss2&2.61&1.41&4.06&1.52\\
-planet1.kiss2&1.26&1.04&1.61&1.22\\
-planet.kiss2&1.27&1.27&1.61&1.26\\
-s1a.kiss2&1.45&1.15&1.87&1.22\\
-s1.kiss2&1.33&1.10&1.66&1.18\\
-sand.kiss2&1.31&1.13&1.56&1.22\\
-scf.kiss2&1.14&1.06&1.33&1.04\\
-sse.kiss2&2.29&1.24&3.20&1.47\\
-styr.kiss2&1.36&1.03&1.72&1.09\\
-tbk.kiss2&1.34&1.00&1.47&1.10\\
-train11.kiss2&3.95&1.72&&\\
-\hline
-\end{tabular}
-\end{table*}
-
-Why is train11 missing 64-bit data
 
 %Number of gates: 632
 %Area: 1088080.00
@@ -294,19 +138,4 @@ Why is train11 missing 64-bit data
 
 %1508928.00 instead of 1765984.00 (1.4X instead 1.6X) sound like a more reasonable area overhead for encrypting alu4 with 16 key gates?
 %Delay is 13.56
-
-\begin{table}
-\caption{Results for the delay-based exhaustive attack on c880 (The \emph{choice; map; ps} command sequence of the ABC synthesis tool is repeatedly executed until we get three consecutive delay increases or the area stops improving)}
-\begin{tabular}{ | c | c | c | c | }
-\hline
-Hamming distance & &  & 4 \\
-&&  & 3 \\
-&&  & 3 \\
-&&  & 3 \\
-&&  & 2 \\
-\hline
-Key Size & 10-bit & 11-bit & 12-bit \\
-\hline
-\end{tabular}
-\end{table}
 

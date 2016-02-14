@@ -60,3 +60,226 @@ In Section ??, we report experimental evidence that a sample locking procedure -
 A quick look at locking schemes that have been proposed in the literature reveals a general trend to refrain from perform locking on the RTL; but to rather do it on some a technology-mapped netlist (as in the case ofo \cite{} and \cite{}), or unspecified (but implied to be a network, as in \cite{}). This to justifiable to some extent: one can argue that locking is more easily done on a network-representation of a circuit; rather than an abstract form of desired behaviour (such as a Verilog or VHDL code). To see this, consider that the opportunities for modification are generally higher in a Boolean network than in a corresponding RTL description (a single Verilog line of code such as z = a + b where a and b are 32-bit registers will be converted by a Verilog compiler to a network with at least 32 XOR gates, each of which is candidate for modification by a locking algorithm, e.g. one that inserts XOR gate). The second correctness criterion is also easier to satisfy when working on Boolean network rather than RTL. For example in the context of XOR locking, one can use an automatic test pattern generation tool to make sure that two stuck-at-faults at the selected wires do not cancel each other out, thereby rendering some incorrect key equivalent to the correct one, in the sense that applying the incorrect key results in correct circuit behaviour. Given that ATPG tools accept netlists as input, it is attractive to defer locking till at least some form of synthesis has been performed (e.g, until a corresponding multi-level network has been constructed by the synthesis tool, as a first step to prepare the network for optimization).
 
 In this paper, we argue that performing locking post-synthesis (or in general, after some optimizing transformation has been applied on the RTL) in a logic locking scheme, introduces a subtle vulnerability in the scheme. The vulnerability comes about as a result of the fact that --- Unlike ``raw" RTL (pre-synthesis) --- in an optimized network, different parts of the network are no longer ``independent" of each other as they were before synthesis. Consider, for instance, an optimizing transformation that looks for sequences of inverters in a netlist, and replaces each with a single (or no) inverter (preserving the Boolean function implemented by the network). This is a very simple transformation to apply on a circuit netlist, and one that presumably any worthwhile logic synthesis tool should implicitly or explicitly perform. Now assume that the step of moving inverters up and down the netlist in the XOR locking scheme is removed from the procedure. A sequence of two inverters will then be a dead giveaway that the correct value of the key bit feeding the preceding XOR gate is a 1 (and so an inverter has been placed by the locking procedure after the XOR gate to ensure the first correctness criterion is satisfied). This is of course a trivial example, and it only fair to assume that the authors of the XOR locking procedure introduced the inverter moving step to prevent such an easy attack. Our point is that unless the procedure guarantees \emph{by construction}, and \emph{for every circuit}, that each key is equally likely regardless of the procedure's output (as ensured by our necessary condition for secure synthesis), such a locking procedure should \emph{not} be considered secure.
+
+\begin{table*}
+\caption{Results for the hill-climbing MSE attack on c880. }
+\begin{tabular}{ | c | c | c | }
+\hline
+Key length & Number of correctly recovered bits & Time taken (s) \\
+\hline
+32-bit & 16 & 431.3 \\
+& 14 & 389.4\\
+& 15 & 401.6\\
+& 20 & 380.7\\
+& 17 & 380.6\\
+Avg. & 16.4 &\\
+\hline
+64-bit & 31 & 929.4\\
+& 37 & 1361.5\\
+& 36 & 1442.1\\
+& 33 & 1346.6\\
+& 34 & 1299.1\\
+Avg. & 34.2 & \\
+\hline
+\end{tabular}
+\end{table*}
+
+\begin{table*}
+\caption{Output corruptibility numbers for the hill-climbing MSE attack on c880 obfuscated with 32 key gates. }
+\begin{tabular}{ | c | c | p{5cm} | c | }
+\hline
+Average Corruptibility  & Corruptibility of recovered key  & No. of correctly recovered bits & MSE\\
+\hline
+9.68 & 11.73 & 15 & 81\\
+
+11.17 & 9.54 & 21 & 14\\
+
+12.18 & 7.58 & 18 & 74\\
+
+13.21 & 14.58 & 16 & 32\\
+
+11.60 & 11.73 & 18 & 50\\
+\hline
+\end{tabular}
+\end{table*}
+
+\begin{table}
+\caption{Results for the hill-climbing attack based on the absolute difference in number of nodes and edges on c880}
+\begin{tabular}{ | c | c | c | }
+\hline
+Key length & Number of correctly recovered bits & Time taken (s) \\
+\hline
+32-bit & 23&                                                         1645.87\\
+&24&                                                         1458.24\\
+&27&                                                         1667.95\\
+&25&                                                         1653.95\\
+&25&                                                         1813.47\\
+Avg. & 24.8 &\\
+\hline
+64-bit & 48 &                                                         5385.41 \\
+& 44 &                                                         4790.02 \\
+&48&                                                         4686.72 \\
+&48&                                                         5035.48 \\
+& 47&                                                         3780.07\\
+Avg. & 47&\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table*}
+\caption{Results for the absolute-delay-difference based exhaustive and hill-climbing attacks on c880 obfuscated with 12 and 32 key gates. Delay difference is between observed netlist and the one resulting from unmapping the network then re-mapping it. }
+\begin{tabular}{ | c | c | p{5cm} | c | }
+\hline
+Key length Average Corruptibility  & Corruptibility of recovered key  & No. of correctly recovered bits \\
+\hline
+12-bit & 5.48 & 2.12 & 10\\
+
+& 5.44 & 1.19 & 10\\
+
+& 5.33 & 3.19 & 8\\
+
+& 5.19 & 6 & 7\\
+
+& 4.81 & 1.19 & 10\\
+\hline
+32-bit & 5.48 & 2.12 & 10\\
+
+& 11.48 & 9.54 & 22\\
+
+& 12.25 & 11.46 & 19\\
+
+& 10.11 & 4.38 & 23\\
+
+& 12.16 & 11 & 18\\
+\hline
+\end{tabular}
+\end{table*}
+
+\begin{table}
+\caption{Results for the delay-based exhaustive attack on c880 (The \emph{choice; map; ps} command sequence of the ABC synthesis tool is repeatedly executed until we get three consecutive delay increases or the area stops improving)}
+\begin{tabular}{ | c | c | c | c | }
+\hline
+Hamming distance & 0 & 2 & 5 \\
+&1& 4 & 3 \\
+&1& 3 & 2 \\
+&2& 1 & 2 \\
+&3& 1 & 4 \\
+\hline
+Key Size & 10-bit & 11-bit & 12-bit \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table*}
+\caption{Performance of hill-climbing MSE attack on 11 sequential benchmarks from the MCNC set. Numbers are average number of key bits correctly recovered by attack for 5 runs on each benchmark. }
+\begin{tabular}{ | c | c | c | c | c | c | c | c | c | }
+\hline
+ &	\multicolumn{8}{ | c | }{Key Size} \\
+ \hline
+Circuit Name &	32-bit (MSE) &  & 32-bit (n+d) & 64-bit (MSE) & & 64-bit (n+d) &	128-bit (MSE) & 128-bit (n+d) \\
+\hline
+dk16	&   20.5    &  24.5 &  19.8 &  &   &   &   & 		 \\
+ex1	    &   17      &  23.7 & 17.6 & & & & & 		\\
+keyb &	17.5 & 22.4 & 16.4 & & & & & 		\\
+planet1 &	20 & 21.13 & 15.8 &	39 & 44 & 31.6 & & 	\\
+planet &	19.6 & 20.8 & 14.8 &	33	& & 31.4 & &   \\
+s1a	& 20	& & 16.4 & & & &	& \\
+s1	& 18 & & 16.8 &	37 & & 31.2 & & \\
+sand	& 17.8 & & 13 &	36.6 & & 34.2 & & \\	
+scf	& 21.2	& & 15.4 & 40.2 & & 33.4	& 75 & 63.8 \\
+styr &	18.8 & &	16.2 & 38.6 & & 30 & &  \\	
+tbk	& 22.2 & & 17.6 &	36 & & 34.2 & & \\	
+\hline
+\multicolumn{9}{ | c | }{In all cases for the experiment where I run the attack 100 times, the number of recovered key bits is greater than 50.} \\
+\hline
+\end{tabular}
+\end{table*}
+
+\begin{table}[ht]
+\centering
+\caption{Results from preliminary implementation of desynthesis attack. Locations of key gates are 
+picked at random in each experiment, and the experiment is repeated five times. We report the minimum, maximum and average number of key bit recovered correctly, and the average time (in seconds) that the attack took.}
+\label{my-label}
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|}
+\hline
+\multirow{4}{*}{} & \multicolumn{12}{c|}{Number of Key Bits}                                                                                                                        \\ \cline{2-13} 
+                  & \multicolumn{4}{c|}{32}                             & \multicolumn{4}{c|}{64}                             & \multicolumn{4}{c|}{128}                            \\ \cline{2-13} 
+                  & \multicolumn{3}{l|}{Correctly Recovered} &          & \multicolumn{3}{l|}{Correctly Recovered} &          & \multicolumn{3}{l|}{Correctly Recovered} &          \\ \cline{2-13} 
+                  & Min         & Max         & Avg.         & Time (s) & Min         & Max         & Avg          & Time (s) & Min         & Max         & Avg          & Time (s) \\ \hline
+alu4              & 17          & 20          & 18.2         &     1179.66     & 39          & 46          & 42.4         &      3562.4    & 77          & 90          & 84.2         &    10823.74      \\ \hline
+c880              & 20          & 23          & 21.2         &      1647.896    & 43          & 45          & 44           &    4735.54      & 82          & 94          & 91.2         &    7947.628      \\ \hline
+s1494             & 18          & 19          & 18.4         &      667.4    & 48          & 50          & 47.8         &    2575.932      & 86          & 89          & 86.4         & 7711.1         \\ \hline
+c1908             & 14          & 22          & 18.2         &      520.66    & 36          & 39          & 47.8         &    1365.758     & 86          & 93          & 89.8         & 5553.688         \\ \hline
+c3540             & 18          & 24          & 18.2         &      1005.52    & 30          & 41          & 37.4         &    2732.614     & 68          & 82          & 75.2         & 9499.594         \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table*}
+\caption{Area and delay overheads of our BDD-based obfuscation technique when implemented on the alu4 benchmark. }
+\begin{tabular}{ | c | c | c | c | c | }
+\hline
+ Key size (bits) & Unobfuscated & 5 & 16 & 32 \\
+\hline
+Number of gates & 620 & - & 1048 & 1360 \\
+Area & 1.0X & $\approx$ 1.0X & 1.7X & 2.19X \\
+Delay & 1.0X & 1.13 & 1.6X & 1.3X \\
+\hline
+\end{tabular}
+\end{table*}
+
+\begin{table*}
+\caption{Area and delay overheads of our BDD-based obfuscation technique when implemented on the alu4 benchmark. }
+\begin{tabular}{ | c | c | c | c | c | }
+\hline
+ Benchmark Name & Area Overhead (32-bit) & Delay Overhead (32-bit)  & Area Overhead (64-bit) & Delay Overhead (64-bit) \\
+\hline
+bbara.kiss2&3.91&1.36&5.72&1.68\\
+bbsse.kiss2&2.22&1.27&3.16&1.42\\
+beecount.kiss2&4.04&1.88&11.60&2.36\\
+cse.kiss2&1.72&1.09&0.00&0.00\\
+dk14.kiss2&2.55&1.50&4.08&1.60\\
+dk15.kiss2&3.56&1.32&5.88&1.70\\
+dk16.kiss2&1.46&1.16&1.94&1.24\\
+dk17.kiss2&3.49&1.60&5.69&1.69\\
+dk512.kiss2&3.37&1.45&5.35&1.58\\
+donfile.kiss2&1.75&1.36&2.66&1.38\\
+ex1.kiss2&1.68&1.13&2.28&1.20\\
+ex2.kiss2&2.13&1.38&3.08&1.53\\
+ex3.kiss2&3.23&1.53&5.32&1.58\\
+ex4.kiss2&2.76&1.48&4.31&1.69\\
+ex5.kiss2&3.11&1.41&5.18&1.63\\
+ex6.kiss2&2.96&1.30&4.29&1.42\\
+ex7.kiss2&3.34&1.47&5.40&1.60\\
+keyb.kiss2&1.70&1.08&2.27&1.15\\
+kirkman.kiss2&2.17&1.17&3.02&1.23\\
+mark1.kiss2&2.66&1.55&3.68&1.84\\
+opus.kiss2&2.61&1.41&4.06&1.52\\
+planet1.kiss2&1.26&1.04&1.61&1.22\\
+planet.kiss2&1.27&1.27&1.61&1.26\\
+s1a.kiss2&1.45&1.15&1.87&1.22\\
+s1.kiss2&1.33&1.10&1.66&1.18\\
+sand.kiss2&1.31&1.13&1.56&1.22\\
+scf.kiss2&1.14&1.06&1.33&1.04\\
+sse.kiss2&2.29&1.24&3.20&1.47\\
+styr.kiss2&1.36&1.03&1.72&1.09\\
+tbk.kiss2&1.34&1.00&1.47&1.10\\
+train11.kiss2&3.95&1.72&&\\
+\hline
+\end{tabular}
+\end{table*}
+
+\begin{table}
+\caption{Results for the delay-based exhaustive attack on c880 (The \emph{choice; map; ps} command sequence of the ABC synthesis tool is repeatedly executed until we get three consecutive delay increases or the area stops improving)}
+\begin{tabular}{ | c | c | c | c | }
+\hline
+Hamming distance & &  & 4 \\
+&&  & 3 \\
+&&  & 3 \\
+&&  & 3 \\
+&&  & 2 \\
+\hline
+Key Size & 10-bit & 11-bit & 12-bit \\
+\hline
+\end{tabular}
+\end{table}
+

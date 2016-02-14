@@ -48,7 +48,7 @@ advantage if these are revealed to competing firms.
 %areas such as
 %critical infrastructure (for instance, communication networks, the smart grid and the emerging internet-of-things), national defense and consumer electronics. 
 
-Logic locking, a technique first introduced by Roy et al.~\cite{}, 
+Logic locking, a technique first introduced by Roy et al.~\cite{roy2008epic}, 
 is a promising solution to protect the designer's IP from 
 being thieved by an untrusted foundry.\footnote{This technique has 
 also been referred to as logic obfuscation~\cite{} and logic encryption~\cite{} in the literature. However, following the lead of Roy et al., we will use the term logic locking throughout.}  
@@ -64,7 +64,7 @@ for a certain key, and provides ``junk" [better word?]
 outputs otherwise. 
 The original logic locking procedure proposed by Roy et al. 
 inserts XOR/XNOR gates at randomly chosen locations in the 
-net-list. However, several other logic locking mechanisms have been proposed in literature that use different types of key gates or 
+net-list. Subsequently, several other logic locking mechanisms have been proposed in literature that use different types of key gates or 
 different procedures to insert key gates~\cite{}. 
 
 The correct key, i.e., 
@@ -106,6 +106,13 @@ have proposed a similar attack on IC camouflaging,
 a different but conceptually related hardware 
 defense mechanism.
 
+\begin{figure*}
+  \centering\includegraphics[width=.8\linewidth]{./figs/lenc-v1}
+  \caption{The original logic scheme proposed by Roy et al.~\cite{}.}
+  \label{fig:llock}
+\end{figure*}
+
+
 The work of 
 Subramanyan et al.~\cite{} and El-Massad et al.~\cite{} 
 has established that 
@@ -143,9 +150,9 @@ This leads to the following natural question: \emph{are existing
 logic locking mechanisms secure in the more 
 practical setting in which the attacker only has access to the 
 locked netlist?} The implicit answer to the question 
-has in the literature been in the affirmative. 
+has in the literature been in the affirmative~\cite{roy2008epic}. 
 %\emph{not} have access to a working chip. 
-[MEM: Has this been made explicit somewhere? If so, cite]
+%[MEM: Has this been made explicit somewhere? If so, cite]
 The first contribution of our work is 
 to refute this implicit assumption. 
 We show that netlists locked using 
@@ -155,8 +162,10 @@ of existing logic locking mechanisms using a simple counter-example (see Section
 procedure. We refer to this new attack as the
 \emph{desynthesis attack}. 
 
-Our attack, detailed in 
-Section~\ref{}, builds on the observation that all existing 
+
+
+Our attack builds on the observation that 
+all existing 
 logic mechanisms propose to insert key gates 
 in a \emph{synthesized} 
 Boolean logic netlist. 
@@ -170,14 +179,32 @@ of Boolean logic gates. Boolean logic is
 synthesized using 
 commercial off-the-shelf synthesis tools. As with software 
 compilers, synthesis tools output implementations with low 
-cost; ideally the lowest cost. 
-Herein lies the rub; for every incorrect key, there 
-exists a different implementation with lower cost.
+cost, ideally the lowest cost. 
+Herein lies the rub. For every incorrect key, 
+there 
+exists, in theory, a
+different 
+implementation with equal or lower cost, allowing 
+lower cost keys to be eliminated. 
+Section~\ref{sec:} describes a 
+practical implementation of an attack built on the preceding 
+observation. 
 [DANGER: critic will say, how do you know which synthesis tool. 
-Reply: there are only a few. Proprietary solutions obtain security 
-via obscurity.]
+Reply: there are only a few. Perhaps make this point in the 
+discussion section.]
 
-To address this 
+
+To address the security vulnerability exposed by the 
+desynthesis attack,
+we propose, in Section~\ref{sec:} 
+a \emph{formal notion of security 
+for logic locking} that guarantees that a locked netlist 
+does not leak the correct key to the untrusted foundry. To the 
+best of our knowledge, this is the first time that 
+a notion of security has been formalized for logic locking. 
+
+
+
 
 %We design a new attack, which we refer to as a 
 %\emph{desynthesis} attack, [.....]
