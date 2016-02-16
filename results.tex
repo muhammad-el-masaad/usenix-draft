@@ -12,44 +12,19 @@
                   & \multicolumn{4}{c|}{32}                             & \multicolumn{4}{c|}{64}                             & \multicolumn{4}{c|}{128}                            \\ \cline{2-13} 
                   & \multicolumn{3}{l|}{Correctly Recovered} &          & \multicolumn{3}{l|}{Correctly Recovered} &          & \multicolumn{3}{l|}{Correctly Recovered} &          \\ \cline{2-13} 
                   & Min         & Max         & Avg.         & Time (s) & Min         & Max         & Avg          & Time (s) & Min         & Max         & Avg          & Time (s) \\ \hline
-dk16              &           &           & 24.5         &          &           &           &          &          &           &           &          &          \\ \hline
+dk16              &           &           & 24.5         &          &           &           &         44 &          &           &           &          &          \\ \hline
 ex1              &           &           & 23.7         &          &           &           &            &          &           &           &          &          \\ \hline
 keyb             &           &           & 22.4         &          &           &           &          &          & 
 &           &          &          \\ \hline
 planet1             &           &           & 21.13         &          &           &           &          &         &           &           &          &          \\ \hline
-planet             &           &           & 20.8         &          &           &           &          &         &           &           &          &          \\ \hline
-s1a             &           &           &          &          &           &           &          &         &           &           &          &          \\ \hline
-s1             &           &           &          &          &           &           &          &         &           &           &          &          \\ \hline
-sand             &           &           &          &          &           &           &          &         &           &           &          &          \\ \hline
-scf             &           &           &          &          &           &           &          &         &           &           &          &          \\ \hline
-styr             &           &           &          &          &           &           &          &         &           &           &          &          \\ \hline
-tbk             &           &           &          &          &           &           &          &         &          &           &          &          \\ \hline
+planet             &           &           & 20.8         &          &           &           &      33    &         &           &           &          &          \\ \hline
+s1a             &           &           & 20         &          &           &           &          &      &           &           &          &          \\ \hline
+s1             &           &           & 18          &          &           &           &         37 &         &           &           &          &          \\ \hline
+sand             &           &           & 17.8         &          &           &           &        36.6  &         &           &           &          &          \\ \hline
+scf             &           &           & 21.2         &          &           &           &         40.2 &         &           &           &         75 &          \\ \hline
+styr             &           &           & 18.8         &          &           &           &         38.6 &         &           &           &          &          \\ \hline
+tbk             &           &           & 22.2         &          &           &           &         36 &         &          &           &          &          \\ \hline
 
-\end{tabular}
-\end{table*}
-
-\begin{table*}
-\caption{Performance of hill-climbing MSE attack on 11 sequential benchmarks from the MCNC set. Numbers are average number of key bits correctly recovered by attack for 5 runs on each benchmark. }
-\begin{tabular}{ | c | c | c | c | c | c | c | c | c | }
-\hline
- &	\multicolumn{8}{ | c | }{Key Size} \\
- \hline
-Circuit Name &	32-bit (MSE) &  & 32-bit (n+d) & 64-bit (MSE) & & 64-bit (n+d) &	128-bit (MSE) & 128-bit (n+d) \\
-\hline
-dk16	&   20.5    &  24.5 &  19.8 &  &   &   &   & 		 \\
-ex1	    &   17      &  23.7 & 17.6 & & & & & 		\\
-keyb &	17.5 & 22.4 & 16.4 & & & & & 		\\
-planet1 &	20 & 21.13 & 15.8 &	39 & 44 & 31.6 & & 	\\
-planet &	19.6 & 20.8 & 14.8 &	33	& & 31.4 & &   \\
-s1a	& 20	& & 16.4 & & & &	& \\
-s1	& 18 & & 16.8 &	37 & & 31.2 & & \\
-sand	& 17.8 & & 13 &	36.6 & & 34.2 & & \\	
-scf	& 21.2	& & 15.4 & 40.2 & & 33.4	& 75 & 63.8 \\
-styr &	18.8 & &	16.2 & 38.6 & & 30 & &  \\	
-tbk	& 22.2 & & 17.6 &	36 & & 34.2 & & \\	
-\hline
-\multicolumn{9}{ | c | }{In all cases for the experiment where I run the attack 100 times, the number of recovered key bits is greater than 50.} \\
-\hline
 \end{tabular}
 \end{table*}
 
@@ -67,6 +42,47 @@ tbk	& 22.2 & & 17.6 &	36 & & 34.2 & & \\
 To provide an insight on the once can expect from locking a VLSI design using our procedure, we implement our procedure using PHP and the ABC system \cite{} for BDD construction, and use the implemented tool chain to encrypt sequential circuits from the MCNC benchmark suite. As a baseline, we also report the overhead of locking the same circuits using XOR locking. The results are reported in Table ??.
 
 We note that one can use other, more BDD-targeted synthesis tools (the BDS and FDD tools from the Universities of Amherst and Toronto, respectively for example) in place of ABC as a backend --- to obtain implementations with potentially less area and delay overheads. Whether such tools are better equipped to synthesis circuits resulting from our locking synthesis tool-chain, we leave as topic for future work.
+
+\begin{table*}
+\caption{Area and delay overheads of our BDD-based obfuscation technique when implemented on the alu4 benchmark. }
+\begin{tabular}{ | c | c | c | c | c | }
+\hline
+ Benchmark Name & Area Overhead (32-bit) & Delay Overhead (32-bit)  & Area Overhead (64-bit) & Delay Overhead (64-bit) \\
+\hline
+bbara.kiss2&3.91&1.36&5.72&1.68\\
+bbsse.kiss2&2.22&1.27&3.16&1.42\\
+beecount.kiss2&4.04&1.88&11.60&2.36\\
+cse.kiss2&1.72&1.09&0.00&0.00\\
+dk14.kiss2&2.55&1.50&4.08&1.60\\
+dk15.kiss2&3.56&1.32&5.88&1.70\\
+dk16.kiss2&1.46&1.16&1.94&1.24\\
+dk17.kiss2&3.49&1.60&5.69&1.69\\
+dk512.kiss2&3.37&1.45&5.35&1.58\\
+donfile.kiss2&1.75&1.36&2.66&1.38\\
+ex1.kiss2&1.68&1.13&2.28&1.20\\
+ex2.kiss2&2.13&1.38&3.08&1.53\\
+ex3.kiss2&3.23&1.53&5.32&1.58\\
+ex4.kiss2&2.76&1.48&4.31&1.69\\
+ex5.kiss2&3.11&1.41&5.18&1.63\\
+ex6.kiss2&2.96&1.30&4.29&1.42\\
+ex7.kiss2&3.34&1.47&5.40&1.60\\
+keyb.kiss2&1.70&1.08&2.27&1.15\\
+kirkman.kiss2&2.17&1.17&3.02&1.23\\
+mark1.kiss2&2.66&1.55&3.68&1.84\\
+opus.kiss2&2.61&1.41&4.06&1.52\\
+planet1.kiss2&1.26&1.04&1.61&1.22\\
+planet.kiss2&1.27&1.27&1.61&1.26\\
+s1a.kiss2&1.45&1.15&1.87&1.22\\
+s1.kiss2&1.33&1.10&1.66&1.18\\
+sand.kiss2&1.31&1.13&1.56&1.22\\
+scf.kiss2&1.14&1.06&1.33&1.04\\
+sse.kiss2&2.29&1.24&3.20&1.47\\
+styr.kiss2&1.36&1.03&1.72&1.09\\
+tbk.kiss2&1.34&1.00&1.47&1.10\\
+train11.kiss2&3.95&1.72&&\\
+\hline
+\end{tabular}
+\end{table*}
 
 %c880 (no random restarts) 
 %24 17 72.38 18 66.75 14 43.2 20 67.23 16 82.57

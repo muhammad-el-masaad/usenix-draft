@@ -1,4 +1,9 @@
 \section{Related Work}
+The term ``IC locking" was coined by Alkabani and Koushanfar in \cite{alkabani2007active}, to describe a mechanism by which an IC designer is enabled to restrict an adversary's power to create unauthorized chip copies. The idea is to alter a behavioral specification of by adding . Alkabani's idea assumes the presense of memory elements in the logic to implemented; i.e., that the logic is sequential.
+
+In a later work, Roy, Koushanfar, and Markoc \cite{} proposed an analogous technique to achieve the same goal for circuits with no memory; Rather than modifying the behavioural description, here the design is first synthesized to obtain a gate-level netlist\cite{}, in which extra gates are then added as follows.
+
+
 While attractive, XOR-based locking has been shown to suffer from certain weeknesses. Rajendran et al. show that selection of random wires to replace with XOR gates is ineffective to defend against a certain kind of attack. The attack they describe uses a functional chip, and automatic test pattern generation to resolve the correct values of key bits. They also show that unless wires are selected judiciously, an incorrect key applied to the ``encrypted" circuit may not always result in significantly different behaviour. They describe algorithms for wire selection that, they argue, defends against their attack, and maximize 
 
 Since its introduction, logic encryption has been subject to various kinds of attacks. The first known attack, described by JV et. al, leverages VLSI testing principles to decipher the functionality of the camouflaged gate . The attack described by us in the context of camouflaging could also be potentially adapted to work againt logic encryption. Igor also proposes an attack that uses test patterns provided by the designer to guide a hill climbing search for the correct key.

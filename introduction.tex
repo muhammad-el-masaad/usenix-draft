@@ -24,8 +24,8 @@ from which it can
 recover its Boolean logic gate-level 
 netlist and its 
 Boolean 
-functionality 
-[Citation here? Shall we say IC extraction?]. 
+functionality~\cite{rajendran2012security}.
+%[Citation here? Shall we say IC extraction?]. 
 An untrusted 
 foundry can sell the designer's IP 
 to its competitors or produce and sell extra copies of the 
@@ -34,7 +34,7 @@ In many cases, the chip might implement proprietary
 protocols or algorithms --- the designer stands to loose competitive 
 advantage if these are revealed to competing firms. 
 [proprietary security protocol -- if revealed, security compromised?] 
-[More citations to indicate that industry/DoD etc care about this?]  
+[More citations to indicate that industry/DoD etc care about this?]~\cite{castillo2007ipp,kahng2001constraint,koushanfar2001hardware,musker1998protecting}  
 
 %a heightened risk of intellectual property (IP) theft, 
 %laws are lax  or weakly enforced. Hardware IP theft 
@@ -51,7 +51,7 @@ advantage if these are revealed to competing firms.
 Logic locking, a technique first introduced by Roy et al.~\cite{roy2008epic}, 
 is a promising solution to protect the designer's IP from 
 being thieved by an untrusted foundry.\footnote{This technique has 
-also been referred to as logic obfuscation~\cite{} and logic encryption~\cite{} in the literature. However, following the lead of Roy et al., we will use the term logic locking throughout.}  
+also been referred to as logic obfuscation~\cite{rajendran2012security} and logic encryption~\cite{dupuis2014novel,rajendran2012logic,rajendran2015fault} in the literature. However, following the lead of Roy et al., we will use the term logic locking throughout.}  
 Logic locking works by inserting 
 additional gates, referred to as \emph{key gates}, 
 in a Boolean 
@@ -60,12 +60,12 @@ side-inputs that are referred to as \emph{key bits}. The key bits
 are 
 stored in a key register. 
 The netlist functions as intended \emph{only} 
-for a certain key, and provides ``junk" [better word?]
+for a certain key, and provides incorrect
 outputs otherwise. 
 The original logic locking procedure proposed by Roy et al. 
 inserts XOR/XNOR gates at randomly chosen locations in the 
 net-list. Subsequently, several other logic locking mechanisms have been proposed in literature that use different types of key gates or 
-different procedures to insert key gates~\cite{}. 
+different procedures to insert key gates~\cite{rajendran2012security,rajendran2012logic,rajendran2015fault,plaza2015solving,dupuis2014novel,chakraborty2009harpoon}. 
 
 The correct key, i.e., 
 the key bits that produce the designer's intended 
@@ -79,7 +79,7 @@ If the correct key is compromised, the foundry learns of the
 chip's functionality.\footnote{In fact, the protocol proposed by Roy et al. introduces two keys --- a master key that is common to each chip, and a per-instance chip key. See Section~\ref{sec:discussion} for more details? [how to word?]} 
 
   
-Recent work by Subramanyan et al.~\cite{} has 
+Recent work by Subramanyan et al.~\cite{subramanyan2015evaluating} has 
 established 
 that all
 of the logic locking techniques proposed in literature
@@ -92,7 +92,7 @@ probe the activated chip for the key, but instead
 must infer it from 
 the chip's input/output (IO) functionality.   
 Subramanyan
-et al.~\cite{} propose an attack procedure that 
+et al.~\cite{subramanyan2015evaluating} propose an attack procedure that 
 iteratively applies new inputs to the working chip and 
 uses a SAT solver to 
 (implicitly) eliminate incorrect keys. 
@@ -101,26 +101,25 @@ all but the correct key is [are?] eliminated.
 [too much detail?]
 Subramanyan et al. show that procedure is 
 remarkably effective in unlocking even large circuits locked 
-with up to XXX keys. Concurrently, El Massad et al.~\cite{} 
+with up to XXX keys [Number of keys is not explicitly mentioned in the paper]. Concurrently, El Massad et al.~\cite{el2015integrated} 
 have proposed a similar attack on IC camouflaging, 
 a different but conceptually related hardware 
 defense mechanism.
 
 \begin{figure*}
   \centering\includegraphics[width=.8\linewidth]{./figs/lenc-v1}
-  \caption{The original logic scheme proposed by Roy et al.~\cite{}.}
+  \caption{The XOR logic locking scheme proposed by Roy et al.~\cite{roy2008epic}.}
   \label{fig:llock}
 \end{figure*}
 
 
 The work of 
-Subramanyan et al.~\cite{} and El-Massad et al.~\cite{} 
+Subramanyan et al.~\cite{subramanyan2015evaluating} and El-Massad et al.~\cite{el2015integrated} 
 has established that 
 existing logic 
 locking mechanisms are insecure, but 
 under \emph{conservative}  
 assumptions on the attacker's capabilities.
-[Is it clear what we mean by conservative? Maybe, under impractical assumptions..] 
 That is, for the
 attack to succeed, the attacker, i.e., the untrusted foundry fabricating the chip, 
 must have access to a previously fabricated and 
@@ -142,8 +141,7 @@ chips that are being fabricated for the first time.
 In fact, the first fabrication run is precisely 
 when designer's 
 might be most interested in using logic locking techniques to 
-protect new [and proprietary?] features introduced in the chip. 
-[See ltx for third argument. Required?]
+protect new and proprietary features introduced in the chip. 
 %Finally, locking used to protect an algorithm/mechanisms that has no observable impact on I/O, but helps improve speed/performance. 
 
 This leads to the following natural question: \emph{are existing 
@@ -198,10 +196,21 @@ To address the security vulnerability exposed by the
 desynthesis attack,
 we propose, in Section~\ref{sec:} 
 a \emph{formal notion of security 
-for logic locking} that guarantees that a locked netlist 
-does not leak the correct key to the untrusted foundry. To the 
+for logic locking} that 
+guarantees that a locked netlist 
+does not leak 
+the correct key to the untrusted foundry.
+To the 
 best of our knowledge, this is the first time that 
 a notion of security has been formalized for logic locking. 
+Finally, we propose a new 
+secure logic synthesis 
+procedure, (NAME),   
+that, given $f$, outputs a 
+locked implementation  
+
+
+
 
 
 
