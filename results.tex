@@ -1,32 +1,144 @@
 \section{Experimental Evaluation and Results}
 
-
-
-\begin{table*}[ht]
+\begin{table}[ht]
 \centering
-\caption{Performance of hill-climbing MSE attack on 11 sequential benchmarks from the MCNC set. Numbers are average number of key bits correctly recovered by attack for 5 runs on each benchmark.}
+\caption{Performance of hill-climbing MSE attack on 11 sequential benchmarks from the MCNC set. Numbers are average number of key bits correctly recovered by attack for 100 runs on each benchmark.}
 \label{my-label}
-\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|}
+\begin{tabular}{|l|l|l|l|l|}
 \hline
-\multirow{4}{*}{} & \multicolumn{12}{c|}{Number of Key Bits}                                                                                                                        \\ \cline{2-13} 
-                  & \multicolumn{4}{c|}{32}                             & \multicolumn{4}{c|}{64}                             & \multicolumn{4}{c|}{128}                            \\ \cline{2-13} 
-                  & \multicolumn{3}{l|}{Correctly Recovered} &          & \multicolumn{3}{l|}{Correctly Recovered} &          & \multicolumn{3}{l|}{Correctly Recovered} &          \\ \cline{2-13} 
-                  & Min         & Max         & Avg.         & Time (s) & Min         & Max         & Avg          & Time (s) & Min         & Max         & Avg          & Time (s) \\ \hline
-dk16              &           &           & 24.5         &          &           &           &         44 &          &           &           &          &          \\ \hline
-ex1              &           &           & 23.7         &          &           &           &            &          &           &           &          &          \\ \hline
-keyb             &           &           & 22.4         &          &           &           &          &          & 
-&           &          &          \\ \hline
-planet1             &           &           & 21.13         &          &           &           &          &         &           &           &          &          \\ \hline
-planet             &           &           & 20.8         &          &           &           &      33    &         &           &           &          &          \\ \hline
-s1a             &           &           & 20         &          &           &           &          &      &           &           &          &          \\ \hline
-s1             &           &           & 18          &          &           &           &         37 &         &           &           &          &          \\ \hline
-sand             &           &           & 17.8         &          &           &           &        36.6  &         &           &           &          &          \\ \hline
-scf             &           &           & 21.2         &          &           &           &         40.2 &         &           &           &         75 &          \\ \hline
-styr             &           &           & 18.8         &          &           &           &         38.6 &         &           &           &          &          \\ \hline
-tbk             &           &           & 22.2         &          &           &           &         36 &         &          &           &          &          \\ \hline
+%\multirow{4}{*}{} & \multicolumn{12}{c|}{Number of Key Bits}                                                                                                                        \\ \cline{2-13} 
+ %                 & \multicolumn{4}{c|}{32}                             & \multicolumn{4}{c|}{64}                             & \multicolumn{4}{c|}{128}                            \\ \cline{2-5} 
+                  & \multicolumn{3}{l|}{Correctly Recovered} &          %& \multicolumn{3}{l|}{Correctly Recovered} &          & \multicolumn{3}{l|}{Correctly Recovered} &          
+                  \\ \cline{2-5} 
+                  & Min         & Max         & Avg.         & Time (s) \\ \hline
+dk16              &           &           &          &      \\ \hline
+ex1              &  19         &  28         & 23.7         &  580.08      \\ \hline
+keyb             &  17         &   27        & 22.44         &486.13\\ \hline
+planet1             &           &           &          &   \\ \hline
+planet             & 15          &   27        & 20.53         &839.09\\ \hline
+s1a             &   17        &  26         &        22.16  &524.22
+\\ \hline
+s1             &     16      &    27       &         21.89  &675.5
+\\ \hline
+sand             & 16          &  27         &  22.71        &762.18
+\\ \hline
+scf             &   16        &   28        &    22.24      &1057.85
+\\ \hline
+styr             &           &           &          &\\ \hline
+tbk             &           &           &          &\\ \hline
 
 \end{tabular}
-\end{table*}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Performance of desynthesis attack on 11 sequential benchmarks from the MCNC set, locked using XOR locking, and synthesized using Encounter RTL. Numbers are average number of key bits correctly recovered by attack for 5 runs on each benchmark.}
+\label{my-label}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+%\multirow{4}{*}{} & \multicolumn{12}{c|}{Number of Key Bits}                                                                                                                        \\ \cline{2-13} 
+ %                 & \multicolumn{4}{c|}{32}                             & \multicolumn{4}{c|}{64}                             & \multicolumn{4}{c|}{128}                            \\ \cline{2-5} 
+                  & \multicolumn{3}{l|}{Correctly Recovered} &          %& \multicolumn{3}{l|}{Correctly Recovered} &          & \multicolumn{3}{l|}{Correctly Recovered} &          
+                  \\ \cline{2-5} 
+                  & Min         & Max         & Avg.         & Time (s) \\ \hline
+dk16              &  21         & 30          &     24.5     &      \\ \hline
+ex1              &           &           &          &        \\ \hline
+keyb             &           &           &          &\\ \hline
+planet1             &           &           &          &   \\ \hline
+planet             &           &           &          &\\ \hline
+s1a             &           &           &          &
+\\ \hline
+s1             &           &           &           &
+\\ \hline
+sand             &           &           &          &
+\\ \hline
+scf             &           &           &          &\\ \hline
+styr             &           &           &          &\\ \hline
+tbk             &           &           &          &\\ \hline
+
+\end{tabular}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Performance of desynthesis attack on 7 benchmarks from the MCNC set, locked using interference-based locking. Numbers are average number of key bits correctly recovered by attack for 100 runs on each benchmark.}
+\label{my-label}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+%\multirow{4}{*}{} & \multicolumn{12}{c|}{Number of Key Bits}                                                                                                                        \\ \cline{2-13} 
+ %                 & \multicolumn{4}{c|}{32}                             & \multicolumn{4}{c|}{64}                             & \multicolumn{4}{c|}{128}                            \\ \cline{2-5} 
+                  & \multicolumn{3}{l|}{Correctly Recovered} &          %& \multicolumn{3}{l|}{Correctly Recovered} &          & \multicolumn{3}{l|}{Correctly Recovered} &          
+                  \\ \cline{2-5} 
+                  & Min         & Max         & Avg.         & Time (s) \\ \hline
+dk16              &           &           &       22.4   &      \\ \hline
+ex1              &  19         &  28         & 20.8     &  580.08      \\ \hline
+keyb             &  17         &   27        & 22.4         &486.13\\ \hline
+planet1             &           &           &   19.4       &   \\ \hline
+planet             &           &           &          &\\ \hline
+s1a             &   17        &  26         &  17.8        &524.22
+\\ \hline
+s1             &     16      &    27       &         18.8  &675.5
+\\ \hline
+sand             & 16          &  27         &  19       &762.18
+\\ \hline
+scf             &           &           &   20.6       &\\ \hline
+styr             &           &           &   18       &\\ \hline
+tbk             &           &           &   18.4       &\\ \hline
+
+\end{tabular}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Performance of hill-climbing MSE attack on 11 sequential benchmarks from the MCNC set. Numbers are average number of key bits correctly recovered by attack for 100 runs on each benchmark.}
+\label{my-label}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+%\multirow{4}{*}{} & \multicolumn{12}{c|}{Number of Key Bits}                                                                                                                        \\ \cline{2-13} 
+ %                 & \multicolumn{4}{c|}{32}                             & \multicolumn{4}{c|}{64}                             & \multicolumn{4}{c|}{128}                            \\ \cline{2-5} 
+                  & \multicolumn{3}{l|}{Correctly Recovered} &          %& \multicolumn{3}{l|}{Correctly Recovered} &          & \multicolumn{3}{l|}{Correctly Recovered} &          
+                  \\ \cline{2-5} 
+                  & Min         & Max         & Avg.         & Time (s) \\ \hline
+%dk16              &           &           & 44         &      \\ \hline
+planet1             & 37          & 51           &  44.03        &2932.52\\ \hline
+planet             &   37        &   52        &43.58          &2892.06
+\\ \hline
+s1             &    37       &    52       &         45.5  &2471.49
+\\ \hline
+sand             &   38        &   57        &   47.15       & 2762.83
+\\ \hline
+scf             &           &           &          &\\ \hline
+styr             &           &           &          &\\ \hline
+tbk             &           &           &          &\\ \hline
+
+\end{tabular}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Performance of desynthesis attack on 7 benchmarks from the MCNC set, lokced using interference-based locking. Numbers are average number of key bits correctly recovered by attack for 100 runs on each benchmark.}
+\label{my-label}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+%\multirow{4}{*}{} & \multicolumn{12}{c|}{Number of Key Bits}                                                                                                                        \\ \cline{2-13} 
+ %                 & \multicolumn{4}{c|}{32}                             & \multicolumn{4}{c|}{64}                             & \multicolumn{4}{c|}{128}                            \\ \cline{2-5} 
+                  & \multicolumn{3}{l|}{Correctly Recovered} &          %& \multicolumn{3}{l|}{Correctly Recovered} &          & \multicolumn{3}{l|}{Correctly Recovered} &          
+                  \\ \cline{2-5} 
+                  & Min         & Max         & Avg.         & Time (s) \\ \hline
+%dk16              &           &           & 44         &      \\ \hline
+planet1             &           &            &  44.5        &2932.52\\ \hline
+planet             &   37        &   52        &41.5          &2892.06
+\\ \hline
+s1             &    37       &    52       &           &2471.49
+\\ \hline
+sand             &   38        &   57        &   38.8       & 2762.83
+\\ \hline
+scf             &           &           &     40.2    &\\ \hline
+styr             &           &           &   39.8       &\\ \hline
+tbk             &           &           &    42.6      &\\ \hline
+
+\end{tabular}
+\end{table}
 
 %Results below are for the case where XOR gates are inserted at random, and inverters are left where they are (no moving inverters up and down the netlist). No care is taken to avoid critical paths in the netlist when inserting inverters, but output wires are avoided. 
 

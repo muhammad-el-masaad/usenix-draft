@@ -283,3 +283,28 @@ Key Size & 10-bit & 11-bit & 12-bit \\
 \end{tabular}
 \end{table}
 
+\begin{table*}[ht]
+\centering
+\caption{Performance of hill-climbing MSE attack on 11 sequential benchmarks from the MCNC set. Numbers are average number of key bits correctly recovered by attack for 5 runs on each benchmark.}
+\label{my-label}
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|}
+\hline
+\multirow{4}{*}{} & \multicolumn{12}{c|}{Number of Key Bits}                                                                                                                        \\ \cline{2-13} 
+                  & \multicolumn{4}{c|}{32}                             & \multicolumn{4}{c|}{64}                             & \multicolumn{4}{c|}{128}                            \\ \cline{2-13} 
+                  & \multicolumn{3}{l|}{Correctly Recovered} &          & \multicolumn{3}{l|}{Correctly Recovered} &          & \multicolumn{3}{l|}{Correctly Recovered} &          \\ \cline{2-13} 
+                  & Min         & Max         & Avg.         & Time (s) & Min         & Max         & Avg          & Time (s) & Min         & Max         & Avg          & Time (s) \\ \hline
+dk16              &           &           & 24.5         &          &           &           &         44 &          &           &           &          &          \\ \hline
+ex1              &           &           & 23.7         &          &           &           &            &          &           &           &          &          \\ \hline
+keyb             &           &           & 22.4         &          &           &           &          &          & 
+&           &          &          \\ \hline
+planet1             &           &           & 21.13         &          &           &           &          &         &           &           &          &          \\ \hline
+planet             &           &           & 20.8         &          &           &           &      33    &         &           &           &          &          \\ \hline
+s1a             &           &           & 20         &          &           &           &          &      &           &           &          &          \\ \hline
+s1             &           &           & 18          &          &           &           &         37 &         &           &           &          &          \\ \hline
+sand             &           &           & 17.8         &          &           &           &        36.6  &         &           &           &          &          \\ \hline
+scf             &           &           & 21.2         &          &           &           &         40.2 &         &           &           &         75 &          \\ \hline
+styr             &           &           & 18.8         &          &           &           &         38.6 &         &           &           &          &          \\ \hline
+tbk             &           &           & 22.2         &          &           &           &         36 &         &          &           &          &          \\ \hline
+
+\end{tabular}
+\end{table*}

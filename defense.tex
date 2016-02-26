@@ -35,6 +35,9 @@ $c$ provides correct outputs for all inputs; (2) when the attacker applies an in
 We further extend our definition by allowing a synthesis procedure to be randomized; that is, provided the same circuit description and key as input, two separate executions of the synthesis procedure can result in different outputs (however both must still satisfy the correctness criteria mentioned above).
 
 \subsection{A Notion of Security for Logic Locking}
+
+\NoteME{We could define security similar to the way one-way security is defined for encryption schemes; i.e., an attacker's chance of deciphering a randomly selected plaintext is negligible. In our case that becomes: ``the fab's chance of computing a circuit that implements $f$ --- when $f$ is selected uniformly at random --- is negligible."}
+
  Based on the previous definition for a locking synthesis procedure, we now describe our notion of security. The notion is very simple: for every behavioural description, and every key combination (including the correct key), we require that there be a (necessarily distinct) behavioral description, that when locked using the key combination, produces the same locked netlist that the fab observes. [We could also define security as follows: ]
  
  %We therefore propose that, unless the procedure guarantees \emph{by construction}, and \emph{for every circuit}, that each key is equally likely regardless of the procedure's output (as ensured by our necessary condition for secure synthesis), such a locking procedure should \emph{not} be considered secure.
@@ -77,6 +80,7 @@ It is possible to define a notion of security (and construct a procedure) that a
 
 $$ P(K|C_{D_n})=P(K) $$
 
+or, \emph{in terms of }
 where the probabilities above are taken over the coin flips of the procedure and the developer, and $K$ denotes the locking key.
 \end{definition}
 
@@ -243,6 +247,8 @@ Let $f$ be the input description to $s*$, and denote by $c_k$ the output we get 
 this esse consists of inserting XOR gates at random plac
 %In a bubbled BDD, rather than 
 %Encryption in a bubbled BDD corresponds to inserting new bubbled nodes 
+
+\NoteME{Think about properties the $2^k$ functions may have with respect to the Boolean function of the unlocked circuit. We know they have the same number of ones in their truth tables.}
 
 \subsection{Other Candidate Procedures}
 Both notions of security defined above allow a much simpler construction for a secure procedure than our BDD idea. The construction is as follows: XOR $f$'s output with the output of a point function (whose password is the locking key), pass through an indistinguishability obfuscator, XOR the result with the output of a comparator that takes the input and key lines as arguments). The problem here of course is that the output corruptability for an incorrect netlist is very low. The BDD idea could have an advantage here.
